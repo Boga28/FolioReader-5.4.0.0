@@ -14,9 +14,8 @@
         android:id="@+id/folioPageViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        ads:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        ads:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:direction="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,16 +42,14 @@
     </com.folioreader.ui.view.FolioAppBarLayout>
 
     <LinearLayout
-
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top"
         android:orientation="vertical"
-
         ads:layout_constraintBottom_toTopOf="@+id/adviewLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/folioPageViewPager">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,7 +68,7 @@
                 android:id="@+id/remainingTimeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="240dp"
+                android:layout_marginStart="240dp"
                 android:text="-1:11" />
         </LinearLayout>
 
@@ -113,7 +110,6 @@
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="ca-app-pub-3405044999727097/4131423720"></com.google.android.gms.ads.AdView>
