@@ -11,7 +11,7 @@
 
 
 
-    <com.folioreader.ui.view.DirectionalViewpagerw
+    <com.folioreader.ui.view.DirectionalViewpager
         android:id="@+id/folioPageViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -20,70 +20,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:orientation="vertical"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/elapsedTimeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_marginRight="280dp"
-                   />
-
-                <TextView
-                    android:id="@+id/remainingTimeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-            <SeekBar
-                android:id="@+id/positionBar"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"/>
-            <Button
-                android:id="@+id/playBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/ic_play"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:onClick="playBtnClick"/>
-            </LinearLayout>
-
-        </LinearLayout>
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-3405044999727097/4131423720">
-    </com.google.android.gms.ads.AdView>
-    </LinearLayout>
 
     <com.folioreader.ui.view.FolioAppBarLayout
         android:id="@+id/appBarLayout"
@@ -102,7 +38,74 @@
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"/>
 
+
     </com.folioreader.ui.view.FolioAppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_above="@id/adView">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/elapsedTimeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:11"
+                    android:layout_marginLeft="40dp"/>
+
+                <TextView
+                    android:id="@+id/remainingTimeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-1:11"
+                    android:layout_marginLeft="240dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <SeekBar
+                    android:id="@+id/positionBar"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"/>
+
+                <Button
+                    android:id="@+id/playBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="7dp"
+                    android:background="@drawable/ic_play"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:onClick="playBtnClick"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-3405044999727097/4131423720"></com.google.android.gms.ads.AdView>
+    </RelativeLayout>
+
 
 
 
