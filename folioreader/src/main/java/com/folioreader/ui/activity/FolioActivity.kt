@@ -82,6 +82,11 @@ import com.google.android.gms.ads.reward.RewardItem
 
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.folio_activity.*
+import kotlinx.android.synthetic.main.folio_page_fragment.positionBar
+import kotlinx.android.synthetic.main.folio_page_fragment.elapsedTimeLabel
+import kotlinx.android.synthetic.main.folio_page_fragment.remainingTimeLabel
+import kotlinx.android.synthetic.main.folio_page_fragment.playBtn
+import kotlinx.android.synthetic.main.folio_page_fragment.scrollSeekbar
 import kotlinx.android.synthetic.main.folio_page_fragment.*
 
 
