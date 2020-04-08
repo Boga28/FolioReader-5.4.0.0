@@ -333,17 +333,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             mAdView = findViewById(R.id.adView)
             val adRequest = AdRequest.Builder().build()
             mAdView.loadAd(adRequest)
-        mAudioLink= intent.getStringExtra(FolioReader.EXTRA_AUDIO)
-               toast(this, mAudioLink.toString())
-        var maudio: String = ""
-        maudio = mAudioLink.toString()
-        val uri = maudio.toUri()
-        mp = MediaPlayer.create(this, uri)
-        mp.isLooping = true
-        mp.setVolume(0.5f, 0.5f)
-        totalTime = mp.duration
-        // Position Bar
-        positionBar.max = totalTime
+
         positionBar.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -405,11 +395,26 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     fun playBtnClick(v: View) {
-
+        try {
+            mAudioLink= intent.getStringExtra(FolioReader.EXTRA_AUDIO)
+            toast(this, mAudioLink.toString())
+            var maudio: String = ""
+            maudio = mAudioLink.toString()
+            val uri = maudio.toUri()
+            mp = MediaPlayer.create(this, uri)
+            totalTime = mp.duration
+            // Position Bar
+            positionBar.max = totalTime
+        }
+        catch (e: Exception) {
+            // handler
+            e.printStackTrace()
+        }
         if (mp.isPlaying) {
             // Stop
             mp.pause()
             playBtn.setBackgroundResource(R.drawable.ic_play)
+            positionBar.visibility(View.VISIBLE)
 
         } else {
             // Start

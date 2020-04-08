@@ -83,7 +83,8 @@
             <SeekBar
                 android:id="@+id/positionBar"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/playBtn"
