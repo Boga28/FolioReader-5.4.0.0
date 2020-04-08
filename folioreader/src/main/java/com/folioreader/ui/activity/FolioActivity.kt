@@ -391,9 +391,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     fun createTimeLabel(time: Int): String {
         var timeLabel = ""
-        var min = time / 1000 / 60
-        var sec = time / 1000 % 60
 
+        var hour = (time / (1000 * 60 * 60))
+        var min =  (time % (1000 * 60 * 60)) / (1000 * 60)
+        var sec = ((time % (1000 * 60 * 60)) % (1000 * 60) / 1000)
+
+        if (hour > 0) timeLabel = "$hour:"
         timeLabel = "$min:"
         if (sec < 10) timeLabel += "0"
         timeLabel += sec
@@ -954,6 +957,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+           if (mp.isPlaying) {
+               mp.stop()
+           }
+    }
+    
     override fun onDestroy() {
         super.onDestroy()
 
@@ -971,6 +981,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             localBroadcastManager.sendBroadcast(Intent(FolioReader.ACTION_FOLIOREADER_CLOSED))
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
+        }
+        if (mp.isPlaying) {
+            mp.stop()
         }
     }
 
