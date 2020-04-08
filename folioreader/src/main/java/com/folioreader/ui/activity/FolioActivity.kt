@@ -82,6 +82,9 @@ import com.google.android.gms.ads.reward.RewardItem
 
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.folio_activity.*
+import kotlinx.android.synthetic.main.folio_page_fragment.*
+
+
 import android.media.MediaPlayer
 import android.annotation.SuppressLint
 import android.os.Message
