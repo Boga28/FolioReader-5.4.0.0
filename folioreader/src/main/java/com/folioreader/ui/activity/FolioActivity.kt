@@ -94,7 +94,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     /* ,RewardedVideoAdListener */       {
 
     private lateinit var mp: MediaPlayer
-    private lateinit var runnable:Runnable
     private var totalTime: Int = 0
 
     lateinit var mAdView : AdView
@@ -340,8 +339,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
         toast(this, mAudioLink.toString())
         var maudio: String = ""
-        elapsedTimeLabel.text = ""
-        remainingTimeLabel.text = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
         mp = MediaPlayer.create(this, uri)
@@ -403,12 +400,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         fun createTimeLabel(time: Int): String {
             var timeLabel = ""
+            var min = time / 1000 / 60
+            var sec = time / 1000 % 60
 
-            var hour = (time / (1000 * 60 * 60))
-            var min = (time % (1000 * 60 * 60)) / (1000 * 60)
-            var sec = ((time % (1000 * 60 * 60)) % (1000 * 60) / 1000)
-
-            if (hour > 0) timeLabel = "$hour:"
             timeLabel = "$min:"
             if (sec < 10) timeLabel += "0"
             timeLabel += sec
