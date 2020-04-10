@@ -343,15 +343,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val uri = maudio.toUri()
 
         playBtn.setOnClickListener {
-
+           try {
+               mp.setDataSource(this, uri)
+               mp.prepare()
+           }catch (e : Exception){
+                e.printStackTrace()
+           }
             if (mp.isPlaying) {
                 // Stop
                 mp.pause()
                 playBtn.setBackgroundResource(R.drawable.ic_play)
             } else {
                 // Start
-                mp = MediaPlayer.create(this, uri)
-                mp.prepare()
                 mp.start()
                 playBtn.setBackgroundResource(R.drawable.ic_pause)
                 positionBar.visibility=View.INVISIBLE
