@@ -94,6 +94,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     /* ,RewardedVideoAdListener */       {
 
     private lateinit var mp: MediaPlayer
+    private lateinit var runnable:Runnable
+    private var handler1: Handler = Handler()
     private var totalTime: Int = 0
 
     lateinit var mAdView : AdView
@@ -339,11 +341,26 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
-        mp = MediaPlayer.create(this, uri)
-        mp.prepare()
         totalTime = mp.duration
         // Position Bar
         positionBar.max = totalTime
+
+        playBtn.setOnClickListener {
+
+            if (mp.isPlaying) {
+                // Stop
+                mp.pause()
+                playBtn.setBackgroundResource(R.drawable.ic_play)
+            } else {
+                // Start
+                mp = MediaPlayer.create(this, uri)
+                mp.prepare()
+                mp.start()
+                playBtn.setBackgroundResource(R.drawable.ic_pause)
+                positionBar.visibility=1
+            }
+            initializeSeekBar()
+        }
 
         positionBar.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
@@ -359,7 +376,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 }
         )
         // Thread
-        Thread(Runnable {
+       /* Thread(Runnable {
             while (mp != null) {
                 try {
                     var msg = Message()
@@ -369,11 +386,27 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 } catch (e: InterruptedException) {
                 }
             }
-        }).start()
+        }). start()
+
+        */
 
 
     }
-    @SuppressLint("HandlerLeak")
+    fun initializeSeekBar() {
+        positionBar.max = mp.duration
+
+        runnable = Runnable {
+            positionBar.progress = mp.currentPosition
+
+            elapsedTimeLabel.text = createTimeLabel(mp.duration)
+            val diff = mp.duration - mp.currentPosition
+            remainingTimeLabel.text = createTimeLabel(diff)
+
+            handler1.postDelayed(runnable, 1000)
+        }
+        handler1.postDelayed(runnable, 1000)
+    }
+   /* @SuppressLint("HandlerLeak")
     var handler1 = object : Handler() {
         override fun handleMessage(msg: Message) {
             var currentPosition = msg.what
@@ -388,7 +421,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             var remainingTime = createTimeLabel(totalTime - currentPosition)
             remainingTimeLabel.text = "-$remainingTime"
         }
-    }
+    }*/
 
     fun createTimeLabel(time: Int): String {
         var timeLabel = ""
@@ -405,20 +438,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         return timeLabel
     }
 
-    fun playBtnClick(v: View) {
 
-        if (mp.isPlaying) {
-            // Stop
-            mp.pause()
-            playBtn.setBackgroundResource(R.drawable.ic_play)
-            positionBar.visibility=1
-
-        } else {
-            // Start
-            mp.start()
-            playBtn.setBackgroundResource(R.drawable.ic_pause)
-        }
-    }
     // Ödüllü Reklam
    /* private fun loadRewardedVideoAd() {
         mRewardedVideoAd.loadAd("ca-app-pub-3405044999727097/9904285650",
