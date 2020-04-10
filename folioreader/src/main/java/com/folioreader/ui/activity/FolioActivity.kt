@@ -345,7 +345,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         playBtn.setOnClickListener {
            try {
                mp.setDataSource(this, uri)
-               mp.prepare()
+              
            }catch (e : Exception){
                 e.printStackTrace()
            }
