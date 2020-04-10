@@ -341,9 +341,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
-        totalTime = mp.duration
-        // Position Bar
-        positionBar.max = totalTime
 
         playBtn.setOnClickListener {
 
@@ -357,7 +354,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 mp.prepare()
                 mp.start()
                 playBtn.setBackgroundResource(R.drawable.ic_pause)
-                positionBar.visibility=1
+                positionBar.visibility=View.INVISIBLE
             }
             initializeSeekBar()
         }
