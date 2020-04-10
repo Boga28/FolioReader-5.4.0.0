@@ -340,29 +340,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
         toast(this, mAudioLink.toString())
         var maudio: String = ""
-        elapsedTimeLabel.text =""
-        remainingTimeLabel.text=""
+        elapsedTimeLabel.text = ""
+        remainingTimeLabel.text = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
+        mp = MediaPlayer.create(this, uri)
         totalTime = mp.duration
+
         // Position Bar
         positionBar.max = totalTime
-
-        playBtn.setOnClickListener {
-
-            if (mp.isPlaying) {
-                // Stop
-                mp.pause()
-                playBtn.setBackgroundResource(R.drawable.ic_play)
-            } else {
-                // Start
-                mp = MediaPlayer.create(this, uri)
-                mp.start()
-                playBtn.setBackgroundResource(R.drawable.ic_pause)
-                positionBar.visibility = View.VISIBLE
-            }
-        }
-
         positionBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
@@ -395,40 +381,54 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }).start()
 
+
+
     }
+        @SuppressLint("HandlerLeak")
+        var handler1 = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                var currentPosition = msg.what
 
-    @SuppressLint("HandlerLeak")
-    var handler1 = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            var currentPosition = msg.what
+                // Update positionBar
+                positionBar.progress = currentPosition
 
-            // Update positionBar
-            positionBar.progress = currentPosition
+                // Update Labels
+                var elapsedTime = createTimeLabel(currentPosition)
+                elapsedTimeLabel.text = elapsedTime
 
-            // Update Labels
-            var elapsedTime = createTimeLabel(currentPosition)
-            elapsedTimeLabel.text = elapsedTime
+                var remainingTime = createTimeLabel(totalTime - currentPosition)
+                remainingTimeLabel.text = "-$remainingTime"
+            }
+        }
 
-            var remainingTime = createTimeLabel(totalTime - currentPosition)
-            remainingTimeLabel.text = "-$remainingTime"
+        fun createTimeLabel(time: Int): String {
+            var timeLabel = ""
+
+            var hour = (time / (1000 * 60 * 60))
+            var min = (time % (1000 * 60 * 60)) / (1000 * 60)
+            var sec = ((time % (1000 * 60 * 60)) % (1000 * 60) / 1000)
+
+            if (hour > 0) timeLabel = "$hour:"
+            timeLabel = "$min:"
+            if (sec < 10) timeLabel += "0"
+            timeLabel += sec
+
+            return timeLabel
+        }
+    fun playBtnClick(v: View) {
+
+        if (mp.isPlaying) {
+            // Stop
+            mp.pause()
+            playBtn.setBackgroundResource(R.drawable.ic_play)
+            positionBar.visibility = View.INVISIBLE
+        } else {
+            // Start
+            mp.start()
+            playBtn.setBackgroundResource(R.drawable.ic_pause)
+            positionBar.visibility = View.VISIBLE
         }
     }
-
-    fun createTimeLabel(time: Int): String {
-        var timeLabel = ""
-
-        var hour = (time / (1000 * 60 * 60))
-        var min =  (time % (1000 * 60 * 60)) / (1000 * 60)
-        var sec = ((time % (1000 * 60 * 60)) % (1000 * 60) / 1000)
-
-        if (hour > 0) timeLabel = "$hour:"
-        timeLabel = "$min:"
-        if (sec < 10) timeLabel += "0"
-        timeLabel += sec
-
-        return timeLabel
-    }
-
 
     // Ödüllü Reklam
    /* private fun loadRewardedVideoAd() {
@@ -980,8 +980,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     
     override fun onDestroy() {
         super.onDestroy()
-            mp.reset()
-            mp.stop()
         if (outState != null)
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
 
