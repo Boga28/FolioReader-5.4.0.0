@@ -95,7 +95,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private lateinit var mp: MediaPlayer
     private lateinit var runnable:Runnable
-    private var handler1: Handler = Handler()
     private var totalTime: Int = 0
 
     lateinit var mAdView : AdView
@@ -271,7 +270,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         //Custom Toast Message
 
         //Ödüllü Reklam
-       /* MobileAds.initialize(this, "ca-app-pub-3405044999727097~1425369330")
+        /* MobileAds.initialize(this, "ca-app-pub-3405044999727097~1425369330")
         // Use an activity context to get the rewarded video instance.
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
         mRewardedVideoAd.rewardedVideoAdListener = this
@@ -300,13 +299,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (savedInstanceState != null) {
             searchAdapterDataBundle = savedInstanceState.getBundle(SearchAdapter.DATA_BUNDLE)
-            searchQuery = savedInstanceState.getCharSequence(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY)
+            searchQuery =
+                savedInstanceState.getCharSequence(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY)
         }
 
 
 
         mBookId = intent.getStringExtra(FolioReader.EXTRA_BOOK_ID)
-        mEpubSourceType = intent.extras!!.getSerializable(FolioActivity.INTENT_EPUB_SOURCE_TYPE) as EpubSourceType
+        mEpubSourceType =
+            intent.extras!!.getSerializable(FolioActivity.INTENT_EPUB_SOURCE_TYPE) as EpubSourceType
         if (mEpubSourceType == EpubSourceType.RAW) {
             mEpubRawId = intent.extras!!.getInt(FolioActivity.INTENT_EPUB_SOURCE_PATH)
         } else {
@@ -331,67 +332,58 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else {
             setupBook()
         }
-            MobileAds.initialize(this) {}
-            mAdView = findViewById(R.id.adView)
-            val adRequest = AdRequest.Builder().build()
-            mAdView.loadAd(adRequest)
+        MobileAds.initialize(this) {}
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
-        mAudioLink= intent.getStringExtra(FolioReader.EXTRA_AUDIO)
+        mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
         toast(this, mAudioLink.toString())
         var maudio: String = ""
+        elapsedTimeLabel.text =""
+        remainingTimeLabel.text=""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
+        totalTime = mp.duration
+        // Position Bar
+        positionBar.max = totalTime
 
         playBtn.setOnClickListener {
-           try {
-               mp.setDataSource(this, uri)
-              
-           }catch (e : Exception){
-                e.printStackTrace()
-           }
+
             if (mp.isPlaying) {
                 // Stop
                 mp.pause()
                 playBtn.setBackgroundResource(R.drawable.ic_play)
             } else {
                 // Start
+                mp = MediaPlayer.create(this, uri)
                 mp.start()
                 playBtn.setBackgroundResource(R.drawable.ic_pause)
-                positionBar.visibility=View.INVISIBLE
+                positionBar.visibility = View.VISIBLE
             }
-            try {
-                positionBar.max = mp.duration
-
-                runnable = Runnable {
-                    positionBar.progress = mp.currentPosition
-
-                    elapsedTimeLabel.text = createTimeLabel(mp.duration)
-                    val diff = mp.duration - mp.currentPosition
-                    remainingTimeLabel.text = createTimeLabel(diff)
-
-                    handler1.postDelayed(runnable, 1000)
-                }
-                handler1.postDelayed(runnable, 1000)
-        }catch (e : Exception){
-            e.printStackTrace()
-        }
         }
 
         positionBar.setOnSeekBarChangeListener(
-                object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        if (fromUser) {
-                            mp.seekTo(progress)
-                        }
-                    }
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
-                    override fun onStopTrackingTouch(p0: SeekBar?) {
+            object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    if (fromUser) {
+                        mp.seekTo(progress)
                     }
                 }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                }
+            }
         )
         // Thread
-       /* Thread(Runnable {
+        Thread(Runnable {
             while (mp != null) {
                 try {
                     var msg = Message()
@@ -401,14 +393,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 } catch (e: InterruptedException) {
                 }
             }
-        }). start()
-
-        */
-
+        }).start()
 
     }
 
-   /* @SuppressLint("HandlerLeak")
+    @SuppressLint("HandlerLeak")
     var handler1 = object : Handler() {
         override fun handleMessage(msg: Message) {
             var currentPosition = msg.what
@@ -423,7 +412,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             var remainingTime = createTimeLabel(totalTime - currentPosition)
             remainingTimeLabel.text = "-$remainingTime"
         }
-    }*/
+    }
 
     fun createTimeLabel(time: Int): String {
         var timeLabel = ""
@@ -984,13 +973,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onBackPressed() {
         super.onBackPressed()
            if (mp.isPlaying) {
+               mp.reset()
                mp.stop()
            }
     }
     
     override fun onDestroy() {
         super.onDestroy()
-
+            mp.reset()
+            mp.stop()
         if (outState != null)
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
 
