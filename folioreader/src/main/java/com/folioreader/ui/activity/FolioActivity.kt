@@ -359,7 +359,22 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 playBtn.setBackgroundResource(R.drawable.ic_pause)
                 positionBar.visibility=View.INVISIBLE
             }
-            initializeSeekBar()
+            try {
+                positionBar.max = mp.duration
+
+                runnable = Runnable {
+                    positionBar.progress = mp.currentPosition
+
+                    elapsedTimeLabel.text = createTimeLabel(mp.duration)
+                    val diff = mp.duration - mp.currentPosition
+                    remainingTimeLabel.text = createTimeLabel(diff)
+
+                    handler1.postDelayed(runnable, 1000)
+                }
+                handler1.postDelayed(runnable, 1000)
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
         }
 
         positionBar.setOnSeekBarChangeListener(
@@ -392,20 +407,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
 
     }
-    fun initializeSeekBar() {
-        positionBar.max = mp.duration
 
-        runnable = Runnable {
-            positionBar.progress = mp.currentPosition
-
-            elapsedTimeLabel.text = createTimeLabel(mp.duration)
-            val diff = mp.duration - mp.currentPosition
-            remainingTimeLabel.text = createTimeLabel(diff)
-
-            handler1.postDelayed(runnable, 1000)
-        }
-        handler1.postDelayed(runnable, 1000)
-    }
    /* @SuppressLint("HandlerLeak")
     var handler1 = object : Handler() {
         override fun handleMessage(msg: Message) {
