@@ -342,10 +342,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
         mp = MediaPlayer.create(this, uri)
-        totalTime = mp.duration
 
-        // Position Bar
-        positionBar.max = totalTime
+
         positionBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
@@ -385,6 +383,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         var handler1 = object : Handler() {
             override fun handleMessage(msg: Message) {
                 var currentPosition = msg.what
+                totalTime = mp.duration
+                // Position Bar
+                positionBar.max = totalTime
 
                 // Update positionBar
                 positionBar.progress = currentPosition
