@@ -398,17 +398,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
 
-        fun createTimeLabel(time: Int): String {
-            var timeLabel = ""
-            var min = time / 1000 / 60
-            var sec = time / 1000 % 60
+    fun createTimeLabel(time: Int): String {
+        var timeLabel = ""
+        var min = time / 1000 / 60
+        var sec = time / 1000 % 60
 
-            timeLabel = "$min:"
-            if (sec < 10) timeLabel += "0"
-            timeLabel += sec
+        timeLabel = "$min:"
+        if (sec < 10) timeLabel += "0"
+        timeLabel += sec
 
-            return timeLabel
-        }
+        return timeLabel
+    }
+
     fun playBtnClick(v: View) {
 
         if (mp.isPlaying) {
