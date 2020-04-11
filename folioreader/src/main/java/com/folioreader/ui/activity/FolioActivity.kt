@@ -964,13 +964,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         super.onBackPressed()
         if (mp.isPlaying) {
             mp.stop()
-            mp.reset()
-            mp.release()
         }
+        mp.reset()
     }
     
     override fun onDestroy() {
         super.onDestroy()
+        if (mp.isPlaying) {
+            mp.stop()
+        }
+        mp.reset()
         if (outState != null)
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
 
@@ -986,12 +989,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
-        if (mp.isPlaying) {
-            mp.stop()
-            mp.reset()
-            mp.release()
 
-        }
     }
 
     override fun getCurrentChapterIndex(): Int {
