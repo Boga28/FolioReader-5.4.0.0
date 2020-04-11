@@ -336,12 +336,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
+
+        //Audio Player
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
         toast(this, mAudioLink.toString())
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
-
         mp = MediaPlayer.create(this, uri)
         totalTime = mp.duration
         // Position Bar
@@ -961,10 +962,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onBackPressed() {
         super.onBackPressed()
-           if (mp.isPlaying) {
-               mp.reset()
-               mp.stop()
-           }
+        if (mp.isPlaying) {
+            mp.stop()
+            mp.reset()
+            mp.release()
+        }
     }
     
     override fun onDestroy() {
@@ -986,6 +988,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
         if (mp.isPlaying) {
             mp.stop()
+            mp.reset()
+            mp.release()
+
         }
     }
 
