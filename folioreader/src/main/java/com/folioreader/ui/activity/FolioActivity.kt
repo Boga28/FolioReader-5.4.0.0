@@ -415,6 +415,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             // Start
             mp.start()
             playBtn.setBackgroundResource(R.drawable.ic_pause)
+            positionBar.visibility= View.VISIBLE
         }
     }
 
