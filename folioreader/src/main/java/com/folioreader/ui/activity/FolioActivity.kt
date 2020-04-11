@@ -342,22 +342,29 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
         // Start the media player
-        playBtn.setOnClickListener{
-            player = MediaPlayer.create(applicationContext,uri)
-            player.start()
-            initializeSeekBar()
-            player.setOnCompletionListener {
-                toast(this,"end")
+
+
+            playBtn.setOnClickListener{
+                if (::player.isInitialized) {
+                player = MediaPlayer.create(applicationContext,uri)
+                player.start()
+                initializeSeekBar()
+                player.setOnCompletionListener {
+                    toast(this,"end")
+                }
             }
         }
+
         // Stop the media player
         playBtn.setOnClickListener{
+            if (::player.isInitialized) {
             if(player.isPlaying){
                 player.stop()
                 player.reset()
                 player.release()
                 handler1.removeCallbacks(runnable)
             }
+        }
         }
         // Seek bar change listener
         positionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -378,18 +385,20 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
     // Method to initialize seek bar and audio stats
     fun initializeSeekBar() {
-        positionBar.max = player.seconds
+        if (::player.isInitialized) {
+            positionBar.max = player.seconds
 
-        runnable = Runnable {
-            positionBar.progress = player.currentSeconds
+            runnable = Runnable {
+                positionBar.progress = player.currentSeconds
 
-            elapsedTimeLabel.text = "${player.currentSeconds} sec"
-            val diff = player.seconds - player.currentSeconds
-            remainingTimeLabel.text = "$diff sec"
+                elapsedTimeLabel.text = "${player.currentSeconds} sec"
+                val diff = player.seconds - player.currentSeconds
+                remainingTimeLabel.text = "$diff sec"
 
+                handler1.postDelayed(runnable, 1000)
+            }
             handler1.postDelayed(runnable, 1000)
         }
-        handler1.postDelayed(runnable, 1000)
     }
 
     val MediaPlayer.seconds:Int
