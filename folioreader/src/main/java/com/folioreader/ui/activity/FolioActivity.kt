@@ -92,9 +92,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     View.OnSystemUiVisibilityChangeListener
     //Odullu Reklam için
     /* ,RewardedVideoAdListener */       {
-
-    private lateinit var mp: MediaPlayer
-    private var totalTime: Int = 0
+    private lateinit var player: MediaPlayer
+    private lateinit var runnable:Runnable
+    private var handler1: Handler = Handler()
 
     lateinit var mAdView : AdView
     //private lateinit var mRewardedVideoAd: RewardedVideoAd
@@ -341,63 +341,66 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
-        mp = MediaPlayer.create(this, uri)
-
-
-        positionBar.setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (fromUser) {
-                        mp.seekTo(progress)
-                    }
-                }
-
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                }
-
-                override fun onStopTrackingTouch(p0: SeekBar?) {
+        // Start the media player
+        playBtn.setOnClickListener{
+            player = MediaPlayer.create(applicationContext,uri)
+            player.start()
+            initializeSeekBar()
+            player.setOnCompletionListener {
+                toast(this,"end")
+            }
+        }
+        // Stop the media player
+        playBtn.setOnClickListener{
+            if(player.isPlaying){
+                player.stop()
+                player.reset()
+                player.release()
+                handler1.removeCallbacks(runnable)
+            }
+        }
+        // Seek bar change listener
+        positionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                if (b) {
+                    player.seekTo(i * 1000)
                 }
             }
-        )
-        // Thread
-        Thread(Runnable {
-            while (mp != null) {
-                try {
-                    var msg = Message()
-                    msg.what = mp.currentPosition
-                    handler1.sendMessage(msg)
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException) {
-                }
-            }
-        }).start()
 
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+            }
+        })
 
 
     }
-        @SuppressLint("HandlerLeak")
-        var handler1 = object : Handler() {
-            override fun handleMessage(msg: Message) {
-                var currentPosition = msg.what
-                totalTime = mp.duration
-                // Position Bar
-                positionBar.max = totalTime
+    // Method to initialize seek bar and audio stats
+    fun initializeSeekBar() {
+        positionBar.max = player.seconds
 
-                // Update positionBar
-                positionBar.progress = currentPosition
+        runnable = Runnable {
+            positionBar.progress = player.currentSeconds
 
-                // Update Labels
-                var elapsedTime = createTimeLabel(currentPosition)
-                elapsedTimeLabel.text = elapsedTime
+            elapsedTimeLabel.text = "${player.currentSeconds} sec"
+            val diff = player.seconds - player.currentSeconds
+            remainingTimeLabel.text = "$diff sec"
 
-                var remainingTime = createTimeLabel(totalTime - currentPosition)
-                remainingTimeLabel.text = "-$remainingTime"
-            }
+            handler1.postDelayed(runnable, 1000)
         }
+        handler1.postDelayed(runnable, 1000)
+    }
+
+    val MediaPlayer.seconds:Int
+        get() {
+            return this.duration / 1000
+        }
+    val MediaPlayer.currentSeconds:Int
+        get() {
+            return this.currentPosition/1000
+        }
+
 
     fun createTimeLabel(time: Int): String {
         var timeLabel = ""
@@ -409,21 +412,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         timeLabel += sec
 
         return timeLabel
-    }
-
-    fun playBtnClick(v: View) {
-
-        if (mp.isPlaying) {
-            // Stop
-            mp.pause()
-            playBtn.setBackgroundResource(R.drawable.ic_play)
-            positionBar.visibility = View.INVISIBLE
-        } else {
-            // Start
-            mp.start()
-            playBtn.setBackgroundResource(R.drawable.ic_pause)
-            positionBar.visibility = View.VISIBLE
-        }
     }
 
     // Ödüllü Reklam
@@ -968,9 +956,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onBackPressed() {
         super.onBackPressed()
-           if (mp.isPlaying) {
-               mp.reset()
-               mp.stop()
+           if (player.isPlaying) {
+               player.reset()
+               player.stop()
            }
     }
     
@@ -991,8 +979,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
-        if (mp.isPlaying) {
-            mp.stop()
+        if (player.isPlaying) {
+            player.stop()
         }
     }
 
