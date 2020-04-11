@@ -343,15 +343,25 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
-        mp = MediaPlayer.create(this, uri)
-        totalTime = mp.duration
-        // Position Bar
-        positionBar.max = totalTime
+        try {
+            mp = MediaPlayer.create(this, uri)
+            totalTime = mp.duration
+            // Position Bar
+            positionBar.max = totalTime
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
+
         positionBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     if (fromUser) {
-                        mp.seekTo(progress)
+                        try {
+                            mp.seekTo(progress)
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
+
                     }
                 }
                 override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -406,7 +416,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     fun playBtnClick(v: View) {
-
+        
         if (mp.isPlaying) {
             // Stop
             mp.pause()
