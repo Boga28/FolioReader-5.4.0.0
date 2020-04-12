@@ -18,10 +18,6 @@ package com.folioreader.ui.activity
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -84,16 +80,33 @@ import android.widget.SeekBar
 import kotlinx.android.synthetic.main.folio_activity.*
 import android.media.MediaPlayer
 import android.annotation.SuppressLint
+import android.content.*
 import android.os.Message
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.net.toUri
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener
     //Odullu Reklam için
     /* ,RewardedVideoAdListener */       {
+    /*
     private lateinit var mp: MediaPlayer
     private var totalTime: Int = 0
+     */
+    private var exoplayerView : SimpleExoPlayerView? = null
+    private var exoplayer : SimpleExoPlayer? = null
+    private var playbackStateBuilder : PlaybackStateCompat.Builder? = null
+    private var mediaSession: MediaSessionCompat? = null
 
 
     lateinit var mAdView : AdView
@@ -343,6 +356,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
+        exoplayerView = findViewById(R.id.simpleExoPlayerView)
+        initializePlayer(uri)
+
+        /*
         try {
             mp = MediaPlayer.create(this, uri)
             totalTime = mp.duration
@@ -381,10 +398,34 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 }
             }
         }).start()
+         */
 
 
     }
-    @SuppressLint("HandlerLeak")
+
+    private fun initializePlayer( mAudiodur:Uri) {
+        val trackSelector = DefaultTrackSelector()
+        exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
+        exoplayerView?.player = exoplayer
+
+        val userAgent = Util.getUserAgent(baseContext, "Exo")
+
+        val mediaSource = ExtractorMediaSource(mAudiodur, DefaultDataSourceFactory(baseContext, userAgent), DefaultExtractorsFactory(), null, null)
+
+        exoplayer?.prepare(mediaSource)
+
+        val componentName = ComponentName(baseContext, "Exo")
+        mediaSession = MediaSessionCompat(baseContext, "ExoPlayer", componentName, null)
+
+        playbackStateBuilder = PlaybackStateCompat.Builder()
+
+        playbackStateBuilder?.setActions(PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PAUSE or
+                PlaybackStateCompat.ACTION_FAST_FORWARD)
+
+        mediaSession?.setPlaybackState(playbackStateBuilder?.build())
+        mediaSession?.isActive = true
+    }
+    /*@SuppressLint("HandlerLeak")
     var handler1 = object : Handler() {
         override fun handleMessage(msg: Message) {
             var currentPosition = msg.what
@@ -416,7 +457,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     fun playBtnClick(v: View) {
-        
+
         if (mp.isPlaying) {
             // Stop
             mp.pause()
@@ -429,6 +470,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             positionBar.visibility= View.VISIBLE
         }
     }
+
+     */
 
     // Ödüllü Reklam
    /* private fun loadRewardedVideoAd() {
@@ -972,18 +1015,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (mp.isPlaying) {
-            mp.stop()
+        releasePlayer()
+    }
+    private fun releasePlayer() {
+        if (exoplayer != null) {
+            exoplayer?.stop()
+            exoplayer?.release()
+            exoplayer = null
         }
-        mp.reset()
     }
     
     override fun onDestroy() {
         super.onDestroy()
-        if (mp.isPlaying) {
-            mp.stop()
-        }
-        mp.reset()
         if (outState != null)
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
 
@@ -999,6 +1042,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
+        releasePlayer()
 
     }
 

@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:direction="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,73 +41,21 @@
 
     </com.folioreader.ui.view.FolioAppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        ads:layout_constraintBottom_toTopOf="@+id/adviewLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/folioPageViewPager">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/elapsedTimeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#71C951" />
-
-            <TextView
-                android:id="@+id/remainingTimeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="240dp"
-                android:text=""
-                android:textColor="#71C951" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <SeekBar
-                android:id="@+id/positionBar"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:visibility="invisible" />
-
-            <Button
-                android:id="@+id/playBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/ic_play"
-                android:onClick="playBtnClick" />
-        </LinearLayout>
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/adviewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/simpleExoPlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
