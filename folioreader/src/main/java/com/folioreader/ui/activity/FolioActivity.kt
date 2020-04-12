@@ -85,6 +85,7 @@ import android.os.Message
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.net.toUri
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -407,6 +408,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val trackSelector = DefaultTrackSelector()
         exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
         exoplayerView?.player = exoplayer
+        simpleExoPlayerView.setFastForwardIncrementMs(30)
+        simpleExoPlayerView.controllerShowTimeoutMs=30
+
 
         val userAgent = Util.getUserAgent(baseContext, "Exo")
 
@@ -424,6 +428,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         mediaSession?.setPlaybackState(playbackStateBuilder?.build())
         mediaSession?.isActive = true
+
     }
     /*@SuppressLint("HandlerLeak")
     var handler1 = object : Handler() {
