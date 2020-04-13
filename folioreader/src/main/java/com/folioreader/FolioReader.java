@@ -38,11 +38,14 @@ public class FolioReader {
 
     public static final String EXTRA_BOOK_ID = "com.folioreader.extra.BOOK_ID";
     public static final String EXTRA_AUDIO = "com.folioreader.extra.AUDIO";
+    public static final String EXTRA_AUDIO_LAST_LOCATOR = "com.folioreader.extra.AUDIO_LAST_LOCATOR";
     public static final String EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR";
     public static final String EXTRA_PORT_NUMBER = "com.folioreader.extra.PORT_NUMBER";
     public static final String ACTION_SAVE_READ_LOCATOR = "com.folioreader.action.SAVE_READ_LOCATOR";
     public static final String ACTION_CLOSE_FOLIOREADER = "com.folioreader.action.CLOSE_FOLIOREADER";
     public static final String ACTION_FOLIOREADER_CLOSED = "com.folioreader.action.FOLIOREADER_CLOSED";
+    public static long mAudioLastLoc= 0;
+
 
     private Context context;
     private Config config;
@@ -52,6 +55,7 @@ public class FolioReader {
     private ReadLocatorListener readLocatorListener;
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
+
 
     @Nullable
     public Retrofit retrofit;
@@ -84,13 +88,18 @@ public class FolioReader {
     private BroadcastReceiver readLocatorReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            long audioLastLoc = (long) intent.getSerializableExtra("lastAudioSecond");
             ReadLocator readLocator =
                     (ReadLocator) intent.getSerializableExtra(FolioReader.EXTRA_READ_LOCATOR);
             if (readLocatorListener != null)
                 readLocatorListener.saveReadLocator(readLocator);
+            mAudioLastLoc=audioLastLoc;
         }
     };
+
+    public static long getmAudioLastLoc() {
+        return mAudioLastLoc;
+    }
 
     private BroadcastReceiver closedReceiver = new BroadcastReceiver() {
         @Override
@@ -115,11 +124,6 @@ public class FolioReader {
         return singleton;
     }
 
-       /* public String audioLink (String audilnk){
-        String  audilnk1=audilnk;
-        return audilnk1;
-        }
-        */
 
     private FolioReader() {
     }
@@ -137,10 +141,11 @@ public class FolioReader {
                 new IntentFilter(ACTION_FOLIOREADER_CLOSED));
     }
 
-    public FolioReader openBook(String assetOrSdcardPath , String audioLink) {
+    public FolioReader openBook(String assetOrSdcardPath , String audioLink, String audioLastLocator) {
 
         Intent intent = getIntentFromUrl(assetOrSdcardPath, 0);
         intent.putExtra(EXTRA_AUDIO, audioLink);
+        intent.putExtra(EXTRA_AUDIO_LAST_LOCATOR, audioLastLocator);
         context.startActivity(intent);
         return singleton;
     }
