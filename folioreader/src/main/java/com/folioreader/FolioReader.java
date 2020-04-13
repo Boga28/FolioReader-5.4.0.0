@@ -1,6 +1,7 @@
 package com.folioreader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 /**
  * Created by avez raj on 9/13/2017.
  */
@@ -44,7 +47,6 @@ public class FolioReader {
     public static final String ACTION_SAVE_READ_LOCATOR = "com.folioreader.action.SAVE_READ_LOCATOR";
     public static final String ACTION_CLOSE_FOLIOREADER = "com.folioreader.action.CLOSE_FOLIOREADER";
     public static final String ACTION_FOLIOREADER_CLOSED = "com.folioreader.action.FOLIOREADER_CLOSED";
-    public static String mAudioLastLoc;
 
 
     private Context context;
@@ -88,18 +90,14 @@ public class FolioReader {
     private BroadcastReceiver readLocatorReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String audioLastLoc =  intent.getStringExtra("lastAudioSecond");
             ReadLocator readLocator =
                     (ReadLocator) intent.getSerializableExtra(FolioReader.EXTRA_READ_LOCATOR);
             if (readLocatorListener != null)
                 readLocatorListener.saveReadLocator(readLocator);
-            mAudioLastLoc=audioLastLoc;
         }
     };
 
-    public static String getmAudioLastLoc() {
-        return mAudioLastLoc;
-    }
+
 
     private BroadcastReceiver closedReceiver = new BroadcastReceiver() {
         @Override
@@ -141,12 +139,12 @@ public class FolioReader {
                 new IntentFilter(ACTION_FOLIOREADER_CLOSED));
     }
 
-    public FolioReader openBook(String assetOrSdcardPath , String audioLink, String audioLastLocator) {
+    public FolioReader openBook(String assetOrSdcardPath , String audioLink, Long audioLastLocator) {
 
         Intent intent = getIntentFromUrl(assetOrSdcardPath, 0);
         intent.putExtra(EXTRA_AUDIO, audioLink);
         intent.putExtra(EXTRA_AUDIO_LAST_LOCATOR, audioLastLocator);
-        context.startActivity(intent);
+        startActivityForResult((Activity) context,intent,1,null);
         return singleton;
     }
     public FolioReader openBook(String assetOrSdcardPath) {

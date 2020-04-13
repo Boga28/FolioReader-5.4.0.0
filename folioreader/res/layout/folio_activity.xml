@@ -45,13 +45,15 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/simpleExoPlayerView"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         ads:fastforward_increment="30000"
         ads:rewind_increment="30000"
+        ads:use_artwork="false"
         ads:hide_on_touch="false"
         ads:layout_constraintBottom_toTopOf="@+id/adviewLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        ads:controller_layout_id="@layout/exo_playback_control_view"/>
 
     <LinearLayout
         android:id="@+id/adviewLayout"
