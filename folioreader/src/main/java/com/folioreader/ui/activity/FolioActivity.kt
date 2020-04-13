@@ -407,8 +407,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private fun initializePlayer( mAudiodur:Uri) {
         val trackSelector = DefaultTrackSelector()
         exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
+        exoplayer?.seekTo(30000-5000)
         exoplayerView?.player = exoplayer
-        exoplayer?.seekTo(30000)
+
 
         val userAgent = Util.getUserAgent(baseContext, "Exo")
 
