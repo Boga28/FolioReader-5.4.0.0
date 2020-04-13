@@ -125,7 +125,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
     private var entryReadLocator: ReadLocator? = null
     private var lastReadLocator: ReadLocator? = null
-    private var lastAudioSecond: Long? = null
     private var outState: Bundle? = null
     private var savedInstanceState: Bundle? = null
 
@@ -135,7 +134,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private var mBookId: String? = null
     private  var mAudioLink: String? = null
-    private  var mAudioLastLocator: Long? = null
     private var mEpubFilePath: String? = null
     private var mEpubSourceType: EpubSourceType? = null
     private var mEpubRawId = 0
@@ -360,15 +358,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
 
-        mAudioLastLocator =  intent.getLongExtra(FolioReader.EXTRA_AUDIO_LAST_LOCATOR,0L)
-        var mAudioLastLocator1 = mAudioLastLocator
-
         exoplayerView = findViewById(R.id.simpleExoPlayerView)
-        if (mAudioLastLocator1 != null) {
-            initializePlayer(uri,mAudioLastLocator1)
-        }else {
-            initializePlayer(uri,0L)
-        }
+
+            initializePlayer(uri)
+
 
         /*
         try {
@@ -414,18 +407,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     }
 
-    private fun initializePlayer( mAudiodur:Uri, mmAudioLastLocator:Long) {
+    private fun initializePlayer( mAudiodur:Uri) {
         val trackSelector = DefaultTrackSelector()
         exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
 
-        var mmmAudioLastLoc :Long =0
-        if(mmAudioLastLocator != null)   {
-            mmmAudioLastLoc=mmAudioLastLocator
-        }  else{
-            mmmAudioLastLoc=0L
-        }
-
-        exoplayer?.seekTo(mmmAudioLastLoc)
         exoplayerView?.player = exoplayer
 
         val userAgent = Util.getUserAgent(baseContext, "Exo")
@@ -1051,11 +1036,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (outState != null){
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
         }
-        lastAudioSecond= exoplayer!!.currentPosition
-        var llastAudioSecond:Long= lastAudioSecond as Long
-        val returnIntent:Intent=Intent()
-        returnIntent.putExtra("mAudioLastLoc",llastAudioSecond)
-        setResult(Activity.RESULT_OK,returnIntent)
+
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         localBroadcastManager.unregisterReceiver(searchReceiver)
         localBroadcastManager.unregisterReceiver(closeBroadcastReceiver)
@@ -1069,7 +1050,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().r2StreamerApi = null
         }
         releasePlayer()
-        finish()
     }
 
     override fun getCurrentChapterIndex(): Int {
