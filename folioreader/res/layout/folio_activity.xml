@@ -45,7 +45,7 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/simpleExoPlayerView"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="80dp"
         ads:fastforward_increment="30000"
         ads:rewind_increment="30000"
         ads:hide_on_touch="false"
