@@ -1052,8 +1052,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
         }
         lastAudioSecond= exoplayer!!.currentPosition
+        var llastAudioSecond:Long= lastAudioSecond as Long
         val returnIntent:Intent=Intent()
-        returnIntent.putExtra("mAudioLastLoc",lastAudioSecond)
+        returnIntent.putExtra("mAudioLastLoc",llastAudioSecond)
         setResult(Activity.RESULT_OK,returnIntent)
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         localBroadcastManager.unregisterReceiver(searchReceiver)
