@@ -1,14 +1,15 @@
 package com.folioreader;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.folioreader.model.HighLight;
 import com.folioreader.model.HighlightImpl;
 import com.folioreader.model.locators.ReadLocator;
@@ -20,13 +21,14 @@ import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.ui.base.SaveReceivedHighlightTask;
 import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 
@@ -98,7 +100,6 @@ public class FolioReader {
     };
 
 
-
     private BroadcastReceiver closedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -139,14 +140,16 @@ public class FolioReader {
                 new IntentFilter(ACTION_FOLIOREADER_CLOSED));
     }
 
-    public FolioReader openBook(String assetOrSdcardPath , String audioLink, Long audioLastLocator) {
+    public FolioReader openBook(String assetOrSdcardPath, String audioLink, Long audioLastLocator) {
 
         Intent intent = getIntentFromUrl(assetOrSdcardPath, 0);
         intent.putExtra(EXTRA_AUDIO, audioLink);
         intent.putExtra(EXTRA_AUDIO_LAST_LOCATOR, audioLastLocator);
-        startActivityForResult((Activity) context,intent,1,null);
+        startActivityForResult(null, intent, 1, null);
         return singleton;
     }
+
+
     public FolioReader openBook(String assetOrSdcardPath) {
         Intent intent = getIntentFromUrl(assetOrSdcardPath, 0);
         context.startActivity(intent);
