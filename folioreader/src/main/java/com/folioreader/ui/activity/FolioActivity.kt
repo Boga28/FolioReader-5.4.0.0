@@ -408,9 +408,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val trackSelector = DefaultTrackSelector()
         exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
         exoplayerView?.player = exoplayer
-        simpleExoPlayerView.setFastForwardIncrementMs(30)
-        simpleExoPlayerView.controllerShowTimeoutMs=30
-
+        exoplayer?.seekTo(30000)
 
         val userAgent = Util.getUserAgent(baseContext, "Exo")
 
