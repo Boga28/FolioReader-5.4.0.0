@@ -44,7 +44,7 @@ public class FolioReader {
     public static final String ACTION_SAVE_READ_LOCATOR = "com.folioreader.action.SAVE_READ_LOCATOR";
     public static final String ACTION_CLOSE_FOLIOREADER = "com.folioreader.action.CLOSE_FOLIOREADER";
     public static final String ACTION_FOLIOREADER_CLOSED = "com.folioreader.action.FOLIOREADER_CLOSED";
-    public static long mAudioLastLoc= 0;
+    public static String mAudioLastLoc;
 
 
     private Context context;
@@ -88,7 +88,7 @@ public class FolioReader {
     private BroadcastReceiver readLocatorReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            long audioLastLoc = (long) intent.getSerializableExtra("lastAudioSecond");
+            String audioLastLoc =  intent.getStringExtra("lastAudioSecond");
             ReadLocator readLocator =
                     (ReadLocator) intent.getSerializableExtra(FolioReader.EXTRA_READ_LOCATOR);
             if (readLocatorListener != null)
@@ -97,7 +97,7 @@ public class FolioReader {
         }
     };
 
-    public static long getmAudioLastLoc() {
+    public static String getmAudioLastLoc() {
         return mAudioLastLoc;
     }
 

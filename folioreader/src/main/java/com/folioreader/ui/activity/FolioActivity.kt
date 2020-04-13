@@ -125,7 +125,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
     private var entryReadLocator: ReadLocator? = null
     private var lastReadLocator: ReadLocator? = null
-    private var lastAudioSecond: Long? = 0
+    private var lastAudioSecond: String? = null
     private var outState: Bundle? = null
     private var savedInstanceState: Bundle? = null
 
@@ -1037,13 +1037,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     
     override fun onDestroy() {
         super.onDestroy()
-        lastAudioSecond= exoplayer?.currentPosition
+        lastAudioSecond= exoplayer?.currentPosition.toString()
 
         if (outState != null){
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
+            if(lastAudioSecond==null){
+                lastAudioSecond="0"
+            }
             outState!!.putSerializable("lastAudioSecond",lastAudioSecond)
-            toast(this,"lastAudioSecond: "+lastAudioSecond)
         }
+
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         localBroadcastManager.unregisterReceiver(searchReceiver)
         localBroadcastManager.unregisterReceiver(closeBroadcastReceiver)
