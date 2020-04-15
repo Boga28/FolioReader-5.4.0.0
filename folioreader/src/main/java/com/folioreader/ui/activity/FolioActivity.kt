@@ -353,7 +353,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         //Audio Player
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
-        toast(this, mAudioLink.toString())
         var maudio: String = ""
         maudio = mAudioLink.toString()
         val uri = maudio.toUri()
