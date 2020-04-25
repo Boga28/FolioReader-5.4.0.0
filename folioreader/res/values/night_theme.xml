@@ -4,14 +4,14 @@
     <style name="FolioActivityNightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/default_theme_accent_color</item>
+        <item name="colorPrimary">#090909</item>
+        <item name="colorPrimaryDark">#090909</item>
+        <item name="colorAccent">#71C950</item>
         <!-- For ripple color -->
         <item name="colorControlHighlight">#666666</item>
         <item name="actionBarStyle">@style/FolioActivityNightTheme.ActionBarStyle</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
-        <item name="android:windowBackground">@color/webview_night</item>
+        <item name="android:windowBackground">#131314</item>
     </style>
 
     <style name="FolioActivityNightTheme.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
@@ -31,22 +31,22 @@
     <color name="night_default_font_color">#767676</color>
     <color name="night_highlight_delete_fill_color">#888888</color>
     <color name="night_underline_icon_fill_color_top">#888888</color>
-    <color name="night_scroll_bar_color">#FBFBFB</color>
+    <color name="night_scroll_bar_color">#44FBFBFB</color>
 
     <style name="FolioNightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/default_theme_accent_color</item>
+        <item name="colorPrimary">#090909</item>
+        <item name="colorPrimaryDark">#090909</item>
+        <item name="colorAccent">#71C952</item>
         <!-- For ripple color -->
         <item name="colorControlHighlight">#666666</item>
         <item name="actionBarStyle">@style/ActionBarNightStyle</item>
         <item name="android:colorBackground">@color/night_background_color</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/black</item>
 
-        <item name="defaultFontColor">@color/night_default_font_color</item>
+        <item name="defaultFontColor">#767677</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="searchItemHeaderBackgroundColor">#222222</item>
         <item name="dividerColor">#666666</item>
