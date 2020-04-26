@@ -124,5 +124,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
+        ads:adUnitId="@string/ads_banner_foliact"></com.google.android.gms.ads.AdView>
 </RelativeLayout>
