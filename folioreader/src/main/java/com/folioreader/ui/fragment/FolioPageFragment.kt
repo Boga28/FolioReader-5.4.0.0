@@ -9,7 +9,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcelable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -290,7 +293,7 @@ class FolioPageFragment : Fragment(),
     override fun onReceiveHtml(html: String) {
         if (isAdded) {
             mHtmlString = html
-            setHtml(false)
+           setHtml(false)
         }
     }
 
@@ -315,14 +318,20 @@ class FolioPageFragment : Fragment(),
                 } else {
                     getString(R.string.html_mime_type)
                 }
+            val spannable = SpannableString(mHtmlString)
+            spannable.setSpan(
+                ForegroundColorSpan(Color.BLUE),
+                0, 4,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             uiHandler.post {
                 mWebview!!.loadDataWithBaseURL(
                     mActivityCallback?.streamerUrl + path,
-                    HtmlUtil.getHtmlContent(mWebview!!.context, mHtmlString, mConfig!!),
+                    HtmlUtil.getHtmlContent(mWebview!!.context, spannable.toString(), mConfig!!),
                     mimeType,
                     "UTF-8", null
                 )
+
             }
         }
     }

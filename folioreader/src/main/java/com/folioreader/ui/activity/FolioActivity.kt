@@ -430,53 +430,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mediaSession?.isActive = true
 
     }
-    /*@SuppressLint("HandlerLeak")
-    var handler1 = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            var currentPosition = msg.what
 
-            // Update positionBar
-            positionBar.progress = currentPosition
-
-            // Update Labels
-            var elapsedTime = createTimeLabel(currentPosition)
-            elapsedTimeLabel.text = elapsedTime
-
-            var remainingTime = createTimeLabel(totalTime - currentPosition)
-            remainingTimeLabel.text = "-$remainingTime"
-        }
-    }
-
-
-
-    fun createTimeLabel(time: Int): String {
-        var timeLabel = ""
-        var min = time / 1000 / 60
-        var sec = time / 1000 % 60
-
-        timeLabel = "$min:"
-        if (sec < 10) timeLabel += "0"
-        timeLabel += sec
-
-        return timeLabel
-    }
-
-    fun playBtnClick(v: View) {
-
-        if (mp.isPlaying) {
-            // Stop
-            mp.pause()
-            playBtn.setBackgroundResource(R.drawable.ic_play)
-
-        } else {
-            // Start
-            mp.start()
-            playBtn.setBackgroundResource(R.drawable.ic_pause)
-            positionBar.visibility= View.VISIBLE
-        }
-    }
-
-     */
 
     // Ödüllü Reklam
    /* private fun loadRewardedVideoAd() {

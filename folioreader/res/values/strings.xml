@@ -1,6 +1,8 @@
 <resources>
 
     <string name="app_name">FolioReader</string>
+    <string name="ads_banner_foliact">ca-app-pub-3405044999727097/4131423720</string>
+    <string name="ads_id">ca-app-pub-3405044999727097~142536933</string>
 
     <string name="andada">Andada</string>
     <string name="lato">Lato</string>
