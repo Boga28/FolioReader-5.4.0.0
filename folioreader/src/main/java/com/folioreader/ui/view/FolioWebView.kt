@@ -325,7 +325,7 @@ class FolioWebView : WebView {
         uiHandler.post { loadUrl("javascript:clearSelection()") }
         val tv_word: TextView = findViewById(R.id.tv_word)
         val tv_wordTR: TextView = findViewById(R.id.tv_wordTR)
-        tv_word.text=selectedText
+        tv_word.setText(selectedText)
 
         when (id) {
             R.id.copySelection -> {
@@ -338,6 +338,19 @@ class FolioWebView : WebView {
                 UiUtil.share(context, selectedText)
             }
             R.id.defineSelection -> {
+                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")
+                uiHandler.post { showDictDialog(selectedText) }
+            }
+            R.id.bt_Learn -> {
+                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> copySelection -> $selectedText")
+                UiUtil.copyToClipboard(context, selectedText)
+                Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT).show()
+            }
+            R.id.bt_Learned -> {
+                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
+                UiUtil.share(context, selectedText)
+            }
+            R.id.btn_speaker -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")
                 uiHandler.post { showDictDialog(selectedText) }
             }
