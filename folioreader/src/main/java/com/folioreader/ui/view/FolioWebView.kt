@@ -311,9 +311,7 @@ class FolioWebView : WebView {
     fun onTextSelectionItemClicked(id: Int, selectedText: String?) {
 
         uiHandler.post { loadUrl("javascript:clearSelection()") }
-        val tv_word: TextView = findViewById(R.id.tv_word)
-        val tv_wordTR: TextView = findViewById(R.id.tv_wordTR)
-        tv_word.setText(selectedText)
+        viewTextSelection.tv_word.setText(selectedText)
 
         when (id) {
             R.id.copySelection -> {
