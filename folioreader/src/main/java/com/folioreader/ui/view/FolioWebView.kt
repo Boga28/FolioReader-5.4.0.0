@@ -289,9 +289,6 @@ class FolioWebView : WebView {
         viewTextSelection = LayoutInflater.from(ctw).inflate(R.layout.text_selection, null)
         viewTextSelection.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
 
-        loadUrl("javascript:onTextSelectionItemContent()")
-
-
         viewTextSelection.yellowHighlight.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> yellowHighlight")
             onHighlightColorItemsClicked(HighlightStyle.Yellow, false)
@@ -334,11 +331,7 @@ class FolioWebView : WebView {
         }
     }
 
-    @JavascriptInterface
-    fun onTextSelectionItemContent(selectedText: String?) {
-        viewTextSelection.tv_word.setText(selectedText)
 
-    }
 
     @JavascriptInterface
     fun onTextSelectionItemClicked(id: Int, selectedText: String?) {
@@ -355,8 +348,6 @@ class FolioWebView : WebView {
             R.id.shareSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
                 UiUtil.share(context, selectedText)
-                viewTextSelection.tv_word.setText("")
-
             }
             R.id.defineSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")
@@ -810,6 +801,12 @@ class FolioWebView : WebView {
         }
     }
 
+    @JavascriptInterface
+    fun onTextSelectionItemContent(selectedText: String?) {
+        viewTextSelection.tv_word.setText(selectedText)
+
+    }
+
     private fun showTextSelectionPopup() {
         Log.v(LOG_TAG, "-> showTextSelectionPopup")
         Log.d(LOG_TAG, "-> showTextSelectionPopup -> To be laid out popupRect -> $popupRect")
@@ -849,5 +846,7 @@ class FolioWebView : WebView {
         isScrollingCheckDuration = 0
         if (!destroyed)
             uiHandler.postDelayed(isScrollingRunnable, IS_SCROLLING_CHECK_TIMER.toLong())
+            loadUrl("javascript:onTextSelectionItemContent()")
+
     }
 }
