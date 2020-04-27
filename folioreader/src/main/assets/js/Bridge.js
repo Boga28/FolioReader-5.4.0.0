@@ -818,7 +818,6 @@ function deleteThisHighlight() {
 
 function onTextSelectionItemClicked(id) {
     var selectionType = window.getSelection().type;
-
     var selectedText = "";
     if (selectionType == "Range") {
         selectedText = window.getSelection().toString();
@@ -826,6 +825,16 @@ function onTextSelectionItemClicked(id) {
         selectedText = thisHighlight.textContent;
     }
     FolioWebView.onTextSelectionItemClicked(id, selectedText);
+}
+function onTextSelectionItemContent() {
+    var selectionType = window.getSelection().type;
+    var selectedText = "";
+    if (selectionType == "Range") {
+        selectedText = window.getSelection().toString();
+    } else {
+        selectedText = thisHighlight.textContent;
+    }
+    FolioWebView.onTextSelectionItemContent(selectedText);
 }
 
 function onClickHtml() {
