@@ -488,6 +488,13 @@ class FolioWebView : WebView {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             Log.d(LOG_TAG, "-> onActionItemClicked")
+            evaluateJavascript("javascript:getSelectionRect()") { value ->
+                val rectJson = JSONObject(value)
+                setSelectionRect(
+                    rectJson.getInt("left"), rectJson.getInt("top"),
+                    rectJson.getInt("right"), rectJson.getInt("bottom")
+                )
+            }
             return false
         }
 
@@ -513,6 +520,13 @@ class FolioWebView : WebView {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             Log.d(LOG_TAG, "-> onActionItemClicked")
+            evaluateJavascript("javascript:getSelectionRect()") { value ->
+                val rectJson = JSONObject(value)
+                setSelectionRect(
+                    rectJson.getInt("left"), rectJson.getInt("top"),
+                    rectJson.getInt("right"), rectJson.getInt("bottom")
+                )
+            }
             return false
         }
 

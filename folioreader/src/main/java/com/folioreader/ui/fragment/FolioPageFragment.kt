@@ -318,19 +318,12 @@ class FolioPageFragment : Fragment(),
                 } else {
                     getString(R.string.html_mime_type)
                 }
-            val textir : String = HtmlUtil.getHtmlContent(mWebview!!.context, mHtmlString, mConfig!!)
-            val spannable = SpannableString(textir)
-                spannable.setSpan(
-                    ForegroundColorSpan(Color.RED),
-                    0, textir.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
 
             uiHandler.post {
-
                 mWebview!!.loadDataWithBaseURL(
                     mActivityCallback?.streamerUrl + path,
-                    spannable.toString(),
+                    HtmlUtil.getHtmlContent(mWebview!!.context, mHtmlString, mConfig!!),
                     mimeType,
                     "UTF-8", null
                 )
