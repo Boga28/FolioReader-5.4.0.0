@@ -18,6 +18,7 @@ import android.webkit.ConsoleMessage
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -304,12 +305,27 @@ class FolioWebView : WebView {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+        viewTextSelection.bt_Learn.setOnClickListener{
+            dismissPopupWindow()
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
+        viewTextSelection.bt_Learned.setOnClickListener{
+            dismissPopupWindow()
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
+        viewTextSelection.btn_speaker.setOnClickListener{
+            dismissPopupWindow()
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
     }
 
     @JavascriptInterface
     fun onTextSelectionItemClicked(id: Int, selectedText: String?) {
 
         uiHandler.post { loadUrl("javascript:clearSelection()") }
+        val tv_word: TextView = findViewById(R.id.tv_word)
+        val tv_wordTR: TextView = findViewById(R.id.tv_wordTR)
+        tv_word.text=selectedText
 
         when (id) {
             R.id.copySelection -> {
@@ -488,13 +504,6 @@ class FolioWebView : WebView {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             Log.d(LOG_TAG, "-> onActionItemClicked")
-            evaluateJavascript("javascript:getSelectionRect()") { value ->
-                val rectJson = JSONObject(value)
-                setSelectionRect(
-                    rectJson.getInt("left"), rectJson.getInt("top"),
-                    rectJson.getInt("right"), rectJson.getInt("bottom")
-                )
-            }
             return false
         }
 
@@ -520,13 +529,6 @@ class FolioWebView : WebView {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             Log.d(LOG_TAG, "-> onActionItemClicked")
-            evaluateJavascript("javascript:getSelectionRect()") { value ->
-                val rectJson = JSONObject(value)
-                setSelectionRect(
-                    rectJson.getInt("left"), rectJson.getInt("top"),
-                    rectJson.getInt("right"), rectJson.getInt("bottom")
-                )
-            }
             return false
         }
 

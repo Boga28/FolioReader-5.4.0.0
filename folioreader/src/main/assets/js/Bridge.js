@@ -818,6 +818,7 @@ function deleteThisHighlight() {
 
 function onTextSelectionItemClicked(id) {
     var selectionType = window.getSelection().type;
+
     var selectedText = "";
     if (selectionType == "Range") {
         selectedText = window.getSelection().toString();

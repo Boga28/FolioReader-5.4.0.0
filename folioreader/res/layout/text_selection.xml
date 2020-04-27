@@ -17,13 +17,116 @@
             android:background="?popUpWindowBackground">
 
             <LinearLayout
+                android:id="@+id/popUpLayout"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_speaker"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/ic_volume_gray_24dp"
+                        android:backgroundTint="@color/highlight_blue"
+                        android:onClick="btn_speaker1" />
+
+                    <TextView
+                        android:id="@+id/tv_word"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingEnd="4dp"
+                        android:text="Çeviri yapılcak Kelime"
+                        android:textColor="@color/highlight_blue"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/tv_wordTR"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="Bu Çevirisi Yapılmış Kelime"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/bt_Learn"
+                            android:layout_width="130.1dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="start|bottom"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:onClick="learnBtn"
+                            android:text="learn"
+                            android:textColor="@color/black"
+                            android:visibility="visible" />
+
+                        <Button
+                            android:id="@+id/bt_Learned"
+                            android:layout_width="130.1dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="end|bottom"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:onClick="learnedBtn"
+                            android:text="learned"
+                            android:textColor="@color/black"
+                            android:visibility="visible" />
+                    </FrameLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/firstSectionLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/popUpLayout">
 
                 <TextView
                     android:id="@+id/copySelection"
