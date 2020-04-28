@@ -324,6 +324,9 @@ class FolioWebView : WebView {
         viewTextSelection.learnSelection.setOnClickListener {
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+        viewTextSelection.learnedSelection.setOnClickListener {
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
         viewTextSelection.shareSelection.setOnClickListener {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
@@ -350,7 +353,10 @@ class FolioWebView : WebView {
             }
             R.id.learnSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> learnSelection -> $selectedText")
-                UiUtil.learnSelection(context,selectedText)
+                UiUtil.learnSelection(context,selectedText,"1","0")
+            } R.id.learnedSelection -> {
+                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> learnedSelection -> $selectedText")
+                UiUtil.learnSelection(context,selectedText,"0","1")
             }
             R.id.shareSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")

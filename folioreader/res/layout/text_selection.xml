@@ -26,7 +26,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -34,43 +34,44 @@
 
                     <TextView
                         android:id="@+id/tv_word"
-                        style="@style/TextViewTextSelector"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:ellipsize="end"
-                        android:maxLines="4"
-                        android:paddingEnd="4dp"
-                        android:text="Çevirelecek Kelime" />
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:padding="5dp"
+                        android:text="Çevirelecek Kelime"
+                        android:textColor="@color/highlight_blue"
+                        android:textIsSelectable="true"
+                        android:textSize="12sp" />
 
-                </FrameLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
                     android:orientation="vertical">
 
 
                     <TextView
                         android:id="@+id/tv_wordTR"
                         style="@style/TextViewTextSelector"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="1dp"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:maxLines="4"
-                        android:text="Bu Çevirisi Yapılmış Kelime" />
+                        android:maxLines="2"
+                        android:padding="5dp"
+                        android:text="Bu Çevirisi Yapılmış Kelime"
+                        android:textIsSelectable="true"
+                        android:textSize="12sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="horizontal"    >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/learnSelection"
@@ -79,8 +80,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="3dp"
-                            android:text="Learn"
-                            />
+                            android:text="Learn" />
+
                         <TextView
                             android:id="@+id/speakerSelection"
                             style="@style/TextViewTextSelector"
@@ -88,10 +89,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Listen"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
 
                         <TextView
-                            android:id="@+id/bt_Learned"
+                            android:id="@+id/learnedSelection"
                             style="@style/TextViewTextSelector"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
