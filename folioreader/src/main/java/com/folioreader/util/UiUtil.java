@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -16,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -26,11 +28,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 import com.folioreader.AppContext;
 import com.folioreader.R;
+import com.folioreader.model.sqlite.DbWordLearn;
 import com.folioreader.ui.view.UnderlinedTextView;
 
 import org.json.JSONArray;
@@ -41,6 +46,7 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,8 +59,8 @@ import okhttp3.Response;
  */
 public class UiUtil {
 
-    private static final String LOG_TAG = UiUtil.class.getSimpleName();
 
+    private static final String LOG_TAG = UiUtil.class.getSimpleName();
     public static void setCustomFont(View view, Context ctx, AttributeSet attrs,
                                      int[] attributeSet, int fontId) {
         TypedArray a = ctx.obtainStyledAttributes(attrs, attributeSet);
@@ -158,6 +164,12 @@ public class UiUtil {
         ClipData clip = ClipData.newPlainText("copy", text);
         clipboard.setPrimaryClip(clip);
     }
+    public static void learnSelection(Context context, String text) {
+        DbWordLearn addWord = new DbWordLearn(context);
+        addWord.addWord(context,text);
+
+    }
+
 
     public static void share(Context context, String text) {
         Intent sendIntent = new Intent();
@@ -342,6 +354,8 @@ public class UiUtil {
         return null;
     }
 
+
+
     public static void translate(final Context context, String tv_copy, final TextView tv_wordTR) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
@@ -416,4 +430,5 @@ public class UiUtil {
         }
         return targetlanguage;
     }
+
 }

@@ -321,6 +321,9 @@ class FolioWebView : WebView {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+        viewTextSelection.learnSelection.setOnClickListener {
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
         viewTextSelection.shareSelection.setOnClickListener {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
@@ -344,6 +347,10 @@ class FolioWebView : WebView {
                 UiUtil.copyToClipboard(context, selectedText)
                 Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT)
                     .show()
+            }
+            R.id.learnSelection -> {
+                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> learnSelection -> $selectedText")
+                UiUtil.learnSelection(context,selectedText)
             }
             R.id.shareSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
