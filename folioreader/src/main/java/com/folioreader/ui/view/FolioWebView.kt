@@ -817,6 +817,7 @@ class FolioWebView : WebView {
     @JavascriptInterface
     fun onTextSelectionItemContent(selectedText: String?) {
         viewTextSelection.tv_word.setText(selectedText)
+        UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_word)
         UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR)
 
     }

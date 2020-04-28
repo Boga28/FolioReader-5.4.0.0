@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -16,7 +17,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.StateSet;
@@ -26,6 +33,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -165,7 +173,7 @@ public class UiUtil {
 
     public static void learnSelection(Context context, String text, String learn, String learned) {
         DbWordLearn addWord = new DbWordLearn(context);
-        addWord.addWord(context, text,learn,learned);
+        addWord.addWord(context, text, learn, learned);
 
     }
 
@@ -401,6 +409,71 @@ public class UiUtil {
 
         }
 
+    }
+
+    public static void getStringClick(Context context, String textclicker, TextView textview) {
+        textclicker = textclicker.trim();
+        //Metini cümlelere ayıtmak için (\\.), kelimelere bolmek içinse (Boşluk koyulur).
+        String[] items = textclicker.split(" ");
+        int count = 0;
+        int firstIndex = 0;
+        int lastIndex = 0;
+        SpannableString ss = new SpannableString(textclicker);
+
+        for (String item : items) {
+            lastIndex += item.length() + 1;
+            //Eğer Orjinal metinden büyükse
+            if (lastIndex > textclicker.length()) {
+                lastIndex -= 1;
+            }
+            // Metoda erişme
+            clickler(context, count, firstIndex, lastIndex, items, ss);
+            Log.i("Lo: ", items[count]);
+            firstIndex += item.length() + 1;
+            //Array Sayacı
+            count++;
+        }
+        textview.setText(ss);
+        textview.setMovementMethod(LinkMovementMethod.getInstance());
+
+    }
+
+    public static void clickler(final Context context, final int count, int firstIndex,
+                                int lastIndex, final String[] items, SpannableString sss) {
+        //String Kopyalarken . ve virgülü ayırma
+        String[] target = {".", "\"", ",", ":", " -", "- ", " - "};
+        String[] replacement = {"", "", "", "", "-", "-", "-"};
+        for (int i = 0; i < 6; i++) {
+            items[count] = items[count].replace(target[i], replacement[i]);
+        }
+
+
+        //String Ayarı
+        ForegroundColorSpan LTGRAY = new ForegroundColorSpan(Color.DKGRAY);
+        StyleSpan BOLD = new StyleSpan(Typeface.BOLD);
+
+
+        // Click Arrayı oluşturuldu.
+        ClickableSpan clickableSpan[] = new ClickableSpan[items.length];
+
+        //Click Eventi
+        ClickableSpan clickableSpan1 = new ClickableSpan() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Keime: " + items[count], Toast.LENGTH_SHORT).show();
+
+            }
+        };
+        // Ornek Click her Click arrayine kopylandı
+        clickableSpan[count] = clickableSpan1;
+
+
+        // Her bir kelime Click Eventi vs. Ayrıldı
+        sss.setSpan(clickableSpan[count], firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // RENK ve RENK STİLİ AYARLARI
+        sss.setSpan(LTGRAY, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sss.setSpan(BOLD, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
 

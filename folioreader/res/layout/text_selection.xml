@@ -41,6 +41,7 @@
                         android:maxLines="2"
                         android:padding="5dp"
                         android:text="Çevirelecek Kelime"
+                        android:textStyle="bold"
                         android:textColor="@color/highlight_blue"
                         android:textIsSelectable="true"
                         android:textSize="12sp" />
@@ -63,7 +64,7 @@
                         android:gravity="center"
                         android:maxLines="2"
                         android:padding="5dp"
-                        android:text="Bu Çevirisi Yapılmış Kelime"
+                        android:text="Translating..."
                         android:textIsSelectable="true"
                         android:textSize="12sp" />
 
@@ -79,7 +80,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="3dp"
                             android:text="Learn" />
 
                         <TextView
@@ -87,7 +87,6 @@
                             style="@style/TextViewTextSelector"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
                             android:text="Listen"
                             android:visibility="invisible" />
 
@@ -96,7 +95,6 @@
                             style="@style/TextViewTextSelector"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
                             android:text="Learned" />
 
                     </LinearLayout>
