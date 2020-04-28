@@ -32,12 +32,21 @@ import androidx.core.content.ContextCompat;
 import com.folioreader.AppContext;
 import com.folioreader.R;
 import com.folioreader.ui.view.UnderlinedTextView;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by mahavir on 3/30/16.
@@ -331,5 +340,80 @@ public class UiUtil {
             Log.e(LOG_TAG, "-> ", e);
         }
         return null;
+    }
+
+    public static void translate(final Context context, String tv_copy, final TextView tv_wordTR) {
+        // String tv_copy = "";
+        // tv_copy = tv_word.getText().toString();
+        String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
+                "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
+                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
+                "lang=en-"+Languages()+"&[format=plain]&[options=1]&[callback=set]";//The API service URL
+        final String response1 = "";
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Request request = new Request.Builder()
+                    .url(getURL)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    final JSONObject jsonResult;
+                    final String result = response.body().string();
+                    try {
+                        jsonResult = new JSONObject(result);
+                        JSONArray convertedTextArray = jsonResult.getJSONArray("text");
+                        final String convertedText = convertedTextArray.get(0).toString();
+                        Log.d("okHttp", jsonResult.toString());
+
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Code for the UiThread
+                                tv_wordTR.setText(convertedText);
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            tv_wordTR.setText(ex.getMessage());
+
+        }
+
+    }
+
+
+
+    public static String Languages(){
+        String[] targetLanguages={"af"  ,"am" ,"ar" ,"az" ,"ba" ,"be" ,"bg" ,"bn" ,"bs" ,"ca" ,"ceb" ,"cs" ,"cv" ,"cy" ,"da" ,"de" ,"el" ,"en" ,"eo" ,"es" ,"et" ,"eu" ,"fa" ,"fi" ,"fr" ,"ga" ,"gd" ,"gl" ,"gu" ,"he" ,"hi" ,"hr" ,"ht" ,"hu" ,"hy" ,"id" ,"is" ,"it" ,"ja" ,"jv" ,"ka" ,"kk" ,"km" ,"kn","ko" ,"ky" ,"la" ,"lb","lo" ,"lt" ,"lv" ,"mg" ,"mhr" ,"mi" ,"mk" ,"ml" ,"mn" ,"mr" ,"mrj" ,"ms" ,"mt" ,"my" ,"ne" ,"nl" ,"no" ,"pa" ,"pap" ,"pl" ,"pt" ,"ro" ,"ru" ,"sah" ,"si" ,"sk" ,"sl" ,"sq" ,"sr" ,"su" ,"sv" ,"sw" ,"ta" ,"te" ,"tg" ,"th" ,
+                "tl" ,"tr" ,"tt" ,"udm" ,"uk" ,"ur" ,"uz" ,"vi" ,"xh" ,"yi" ,"zh" };
+
+        String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
+        targetlanguage= targetlanguage.replace(" ","");
+        Log.d("dil:",targetlanguage);
+        int dilIndex=1500;
+        for(int i=0;i<targetLanguages.length;i++){
+            if(targetlanguage.contains(targetLanguages[i])){
+                targetlanguage=targetLanguages[i];
+                dilIndex=i;
+            }
+        }
+        if(dilIndex==1500){
+            targetlanguage="en";
+        }else if(targetlanguage.contains(targetLanguages[dilIndex])){
+            targetlanguage=targetLanguages[dilIndex];
+        }else {
+            targetlanguage="en";
+        }
+        return targetlanguage;
     }
 }
