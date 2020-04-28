@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -441,9 +442,7 @@ public class UiUtil {
 
     public static void clickler(final Context context, final int count, int firstIndex,
                                 int lastIndex, final String[] items, SpannableString sss) {
-        final Dialog myDialog = new Dialog(context);
-        myDialog.setContentView(R.layout.learn_popup);
-        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         //String Kopyalarken . ve virgülü ayırma
         String[] target = {".", "\"", ",", ":", " -", "- ", " - "};
         String[] replacement = {"", "", "", "", "-", "-", "-"};
@@ -464,8 +463,8 @@ public class UiUtil {
         ClickableSpan clickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Keime: " + items[count], Toast.LENGTH_SHORT).show();
-                myDialog.show();
+                Toast.makeText(context, "Kelime: " + items[count], Toast.LENGTH_SHORT).show();
+                myDialogShow(context);
             }
         };
         // Ornek Click her Click arrayine kopylandı
@@ -478,6 +477,25 @@ public class UiUtil {
         // RENK ve RENK STİLİ AYARLARI
         sss.setSpan(BLUELIGHT, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         sss.setSpan(BOLD, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    public static void myDialogShow(Context context){
+        myDialog(context);
+    }
+    public static void myDialogDismiss(Context context){
+        myDialog(context);
+    }
+    public static void myDialog(Context context){
+        try{
+        Dialog myDialog = new Dialog(context);
+        myDialog.setContentView(R.layout.learn_popup);
+        Objects.requireNonNull(myDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (myDialog.isShowing()){
+            myDialog.dismiss();
+        }else if (!myDialog.isShowing()){
+            myDialog.show();
+        }}catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
