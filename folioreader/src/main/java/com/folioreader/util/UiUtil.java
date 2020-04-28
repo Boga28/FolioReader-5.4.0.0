@@ -1,6 +1,7 @@
 package com.folioreader.util;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -440,6 +441,9 @@ public class UiUtil {
 
     public static void clickler(final Context context, final int count, int firstIndex,
                                 int lastIndex, final String[] items, SpannableString sss) {
+        final Dialog myDialog = new Dialog(context);
+        myDialog.setContentView(R.layout.learn_popup);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         //String Kopyalarken . ve virgülü ayırma
         String[] target = {".", "\"", ",", ":", " -", "- ", " - "};
         String[] replacement = {"", "", "", "", "-", "-", "-"};
@@ -449,7 +453,7 @@ public class UiUtil {
 
 
         //String Ayarı
-        ForegroundColorSpan LTGRAY = new ForegroundColorSpan(Color.DKGRAY);
+        ForegroundColorSpan BLUELIGHT = new ForegroundColorSpan(Color.rgb(173,216,255));
         StyleSpan BOLD = new StyleSpan(Typeface.BOLD);
 
 
@@ -461,7 +465,7 @@ public class UiUtil {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Keime: " + items[count], Toast.LENGTH_SHORT).show();
-
+                myDialog.show();
             }
         };
         // Ornek Click her Click arrayine kopylandı
@@ -472,7 +476,7 @@ public class UiUtil {
         sss.setSpan(clickableSpan[count], firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // RENK ve RENK STİLİ AYARLARI
-        sss.setSpan(LTGRAY, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sss.setSpan(BLUELIGHT, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         sss.setSpan(BOLD, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 

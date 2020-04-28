@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="50dp"
+    android:layout_gravity="center"
+    android:background="#2B2F33"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/bt_Learn"
+        android:layout_width="130.1dp"
+        android:layout_height="45dp"
+        android:background="#2B2F33"
+        android:gravity="center"
+        android:text="Learn"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/bt_Learned"
+        android:layout_width="130.1dp"
+        android:layout_height="45dp"
+        android:background="#2B2F33"
+        android:gravity="center"
+        android:text="Learned"
+
+        android:textColor="@color/white" />
+
+</LinearLayout>
