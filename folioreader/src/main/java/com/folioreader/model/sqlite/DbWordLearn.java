@@ -51,7 +51,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
         values.put(KEY_WORD,word);
         values.put(KEY_LEARN,learn);
         values.put(KEY_LEARNED,learned);
-        db.insert(TABLE_NAME,null,values)
+        db.insert(TABLE_NAME,null,values);
         db.close();
         Toast.makeText(context, "Addword durumu: "+word+" :  "+ learn +"  :  "+learned, Toast.LENGTH_LONG).show();
     }
