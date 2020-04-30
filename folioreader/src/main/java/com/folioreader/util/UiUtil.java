@@ -175,8 +175,8 @@ public class UiUtil {
     }
 
     public static void learnSelection(Context context, String text, String learn, String learned) {
-        DbWordLearn addWord = new DbWordLearn(context);
-        addWord.addWord(context, text, learn, learned);
+        DbWordLearn dbWordLearn = new DbWordLearn(context);
+        dbWordLearn.addWord(context, text, learn, learned);
 
     }
 
