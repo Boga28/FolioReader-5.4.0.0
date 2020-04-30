@@ -11,7 +11,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
     private static final String TAG = DbWordLearn.class.getSimpleName();
 
-    public static final int DATABASE_VERSION =4;
+    public static final int DATABASE_VERSION =1;
     private static final String DATABASE_NAME = "wordLearn";
     private static final String TABLE_NAME = "wordLearnData";
     private static final String KEY_ID = "id";
@@ -25,12 +25,12 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                    + KEY_ID + "INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + KEY_WORD + "TEXT,"
-                    + KEY_LEARN + "INTEGER DEFAULT 0,"
-                    + KEY_LEARNED + "INTEGER DEFAULT 0"
-                    +")";
+            String CREATE_TABLE = " CREATE TABLE " +" "+ TABLE_NAME + " ( "
+                    + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + KEY_WORD + " TEXT, "
+                    + KEY_LEARN + " INTEGER DEFAULT 0, "
+                    + KEY_LEARNED + " INTEGER DEFAULT 0 "
+                    +" )";
 
             sqLiteDatabase.execSQL(CREATE_TABLE);
             Log.d("Veritabanı Kuruldu", "Tablo Oluşturuldu.");
@@ -38,7 +38,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_NAME);
+        sqLiteDatabase.execSQL(" drop table if exists  " + TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
