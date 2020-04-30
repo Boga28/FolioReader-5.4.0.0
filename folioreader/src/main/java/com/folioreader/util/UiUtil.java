@@ -29,6 +29,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.StateSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -465,6 +466,7 @@ public class UiUtil {
             public void onClick(View v) {
                 Toast.makeText(context, "Kelime: " + items[count], Toast.LENGTH_SHORT).show();
                 myDialogShow(context);
+
             }
         };
         // Ornek Click her Click arrayine kopylandı
@@ -477,6 +479,7 @@ public class UiUtil {
         // RENK ve RENK STİLİ AYARLARI
         sss.setSpan(BLUELIGHT, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         sss.setSpan(BOLD, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
     }
     public static void myDialogShow(Context context){
         myDialog(context);
@@ -484,6 +487,7 @@ public class UiUtil {
     public static void myDialogDismiss(Context context){
         myDialog(context);
     }
+
     public static void myDialog(Context context){
         try{
         Dialog myDialog = new Dialog(context);

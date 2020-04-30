@@ -11,7 +11,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
     private static final String TAG = DbWordLearn.class.getSimpleName();
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "wordLearn";
     private static final String TABLE_NAME = "wordLearnData";
     private static final String KEY_ID = "id";
@@ -27,10 +27,10 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
             String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                    + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + KEY_WORD + " TEXT NOT NULL ,"
+                    + KEY_ID + "INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + KEY_WORD + "TEXT NOT NULL,"
                     + KEY_LEARN + "INTEGER DEFAULT 0,"
-                    + KEY_LEARNED + " INTEGER DEFAULT 0)";
+                    + KEY_LEARNED + "INTEGER DEFAULT 0)";
 
             sqLiteDatabase.execSQL(CREATE_TABLE);
             Log.d("Veritabanı Kuruldu", "Tablo Oluşturuldu.");
