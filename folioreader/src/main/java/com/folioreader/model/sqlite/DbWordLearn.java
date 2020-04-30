@@ -45,15 +45,16 @@ public class DbWordLearn extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void addWord(Context context,String word,String learn,String learned) {
+    public void addWord(Context context, String word, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_WORD,word);
-        values.put(KEY_LEARN,learn);
-        values.put(KEY_LEARNED,learned);
-        db.insert(TABLE_NAME,null,values);
+        values.put(KEY_WORD, word);
+        values.put(KEY_LEARN, learn);
+        values.put(KEY_LEARNED, learned);
+        long id = db.insert(TABLE_NAME, null, values);
         db.close();
-        Toast.makeText(context, "Addword durumu: "+word+" :  "+ learn +"  :  "+learned, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Addword durumu: "+ id +"  "+  word + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+
     }
 
 }
