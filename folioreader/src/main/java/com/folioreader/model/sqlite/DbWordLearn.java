@@ -2,6 +2,7 @@ package com.folioreader.model.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -42,15 +43,29 @@ public class DbWordLearn extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public long addWord(Context context, String word, String learn, String learned) {
+    public long addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_WORD, word);
-        values.put(KEY_LEARN, learn);
-        values.put(KEY_LEARNED, learned);
-        long id = db.insert(TABLE_NAME, null, values);
+        Cursor kayitlar;
+        long id;
+        kayitlar = db.rawQuery("SELECT * FROM wordLearnData WHERE word= "+wordd+" ORDER BY id DESC LIMIT 500 ", null);
+        if(kayitlar!=null){
+            String idd = kayitlar.getString(kayitlar.getColumnIndex("id"));
+            values.put(KEY_LEARN,learn);
+            values.put(KEY_LEARNED,learned);
+            id= db.update(TABLE_NAME,values,"id = " + idd,null);
+            Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: "+ id + "  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
+
+        }else{
+
+
+            values.put(KEY_WORD, wordd);
+            values.put(KEY_LEARN, learn);
+            values.put(KEY_LEARNED, learned);
+             id = db.insert(TABLE_NAME, null, values);
+            Toast.makeText(context, "Kelime oluşturuldu: " + id + "  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+        }
         db.close();
-        Toast.makeText(context, "Addword durumu: "+ id +"  "+  word + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
         return id;
     }
 

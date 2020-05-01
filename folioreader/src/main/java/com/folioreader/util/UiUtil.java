@@ -174,13 +174,6 @@ public class UiUtil {
         clipboard.setPrimaryClip(clip);
     }
 
-    public static void learnSelection(Context context, String text, String learn, String learned) {
-        DbWordLearn dbWordLearn = new DbWordLearn(context);
-        dbWordLearn.addWord(context, text, learn, learned);
-
-    }
-
-
     public static void share(Context context, String text) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -413,95 +406,6 @@ public class UiUtil {
         }
 
     }
-
-    public static void getStringClick(Context context, String textclicker, TextView textview) {
-        textclicker = textclicker.trim();
-        //Metini cümlelere ayıtmak için (\\.), kelimelere bolmek içinse (Boşluk koyulur).
-        String[] items = textclicker.split(" ");
-        int count = 0;
-        int firstIndex = 0;
-        int lastIndex = 0;
-        SpannableString ss = new SpannableString(textclicker);
-
-        for (String item : items) {
-            lastIndex += item.length() + 1;
-            //Eğer Orjinal metinden büyükse
-            if (lastIndex > textclicker.length()) {
-                lastIndex -= 1;
-            }
-            // Metoda erişme
-            clickler(context, count, firstIndex, lastIndex, items, ss);
-            Log.i("Lo: ", items[count]);
-            firstIndex += item.length() + 1;
-            //Array Sayacı
-            count++;
-        }
-        textview.setText(ss);
-        textview.setMovementMethod(LinkMovementMethod.getInstance());
-
-    }
-
-    public static void clickler(final Context context, final int count, int firstIndex,
-                                int lastIndex, final String[] items, SpannableString sss) {
-
-        //String Kopyalarken . ve virgülü ayırma
-        String[] target = {".", "\"", ",", ":", " -", "- ", " - "};
-        String[] replacement = {"", "", "", "", "-", "-", "-"};
-        for (int i = 0; i < 6; i++) {
-            items[count] = items[count].replace(target[i], replacement[i]);
-        }
-
-
-        //String Ayarı
-        ForegroundColorSpan BLUELIGHT = new ForegroundColorSpan(Color.rgb(173,216,255));
-        StyleSpan BOLD = new StyleSpan(Typeface.BOLD);
-
-
-        // Click Arrayı oluşturuldu.
-        ClickableSpan clickableSpan[] = new ClickableSpan[items.length];
-
-        //Click Eventi
-        ClickableSpan clickableSpan1 = new ClickableSpan() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Kelime: " + items[count], Toast.LENGTH_SHORT).show();
-                myDialogShow(context);
-
-            }
-        };
-        // Ornek Click her Click arrayine kopylandı
-        clickableSpan[count] = clickableSpan1;
-
-
-        // Her bir kelime Click Eventi vs. Ayrıldı
-        sss.setSpan(clickableSpan[count], firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        // RENK ve RENK STİLİ AYARLARI
-        sss.setSpan(BLUELIGHT, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        sss.setSpan(BOLD, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-    }
-    public static void myDialogShow(Context context){
-        myDialog(context);
-    }
-    public static void myDialogDismiss(Context context){
-        myDialog(context);
-    }
-
-    public static void myDialog(Context context){
-        try{
-        Dialog myDialog = new Dialog(context);
-        myDialog.setContentView(R.layout.learn_popup);
-        Objects.requireNonNull(myDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        if (myDialog.isShowing()){
-            myDialog.dismiss();
-        }else if (!myDialog.isShowing()){
-            myDialog.show();
-        }}catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
 
     public static String Languages() {
         String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs", "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd", "gl", "gu", "he", "hi", "hr", "ht", "hu", "hy", "id", "is", "it", "ja", "jv", "ka", "kk", "km", "kn", "ko", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mhr", "mi", "mk", "ml", "mn", "mr", "mrj", "ms", "mt", "my", "ne", "nl", "no", "pa", "pap", "pl", "pt", "ro", "ru", "sah", "si", "sk", "sl", "sq", "sr", "su", "sv", "sw", "ta", "te", "tg", "th",

@@ -321,12 +321,6 @@ class FolioWebView : WebView {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
-        viewTextSelection.learnSelection.setOnClickListener {
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
-        }
-        viewTextSelection.learnedSelection.setOnClickListener {
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
-        }
         viewTextSelection.shareSelection.setOnClickListener {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
@@ -350,13 +344,6 @@ class FolioWebView : WebView {
                 UiUtil.copyToClipboard(context, selectedText)
                 Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT)
                     .show()
-            }
-            R.id.learnSelection -> {
-                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> learnSelection -> $selectedText")
-                UiUtil.learnSelection(context,selectedText,"1","0")
-            } R.id.learnedSelection -> {
-                Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> learnedSelection -> $selectedText")
-                UiUtil.learnSelection(context,selectedText,"0","1")
             }
             R.id.shareSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
@@ -817,7 +804,7 @@ class FolioWebView : WebView {
     @JavascriptInterface
     fun onTextSelectionItemContent(selectedText: String?) {
 
-        UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_word)
+        viewTextSelection.tv_word.setText(selectedText)
         UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR)
 
     }
