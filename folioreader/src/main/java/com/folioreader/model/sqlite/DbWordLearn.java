@@ -52,18 +52,19 @@ public class DbWordLearn extends SQLiteOpenHelper {
             kayitlar = db.rawQuery(query, null);
             kayitlar.moveToFirst();
         }catch (Exception e){ Toast.makeText(context, "Hata var Ulo", Toast.LENGTH_SHORT).show();}
-        if(kayitlar.getInt(0)==1){
-            String idd = kayitlar.getString(kayitlar.getColumnIndex("id"));
-            values.put(KEY_LEARN,learn);
-            values.put(KEY_LEARNED,learned);
-            db.update(TABLE_NAME,values,"id = " + idd,null);
-            Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
-        }else{
+        if(kayitlar.isNull(0)){
             values.put(KEY_WORD, wordd);
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
             db.insert(TABLE_NAME, null, values);
             Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+        }else{
+            String idd = kayitlar.getString(kayitlar.getColumnIndex("id"));
+            values.put(KEY_LEARN,learn);
+            values.put(KEY_LEARNED,learned);
+            db.update(TABLE_NAME,values,"id = " + idd,null);
+            Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
+
         }
         db.close();
     }
