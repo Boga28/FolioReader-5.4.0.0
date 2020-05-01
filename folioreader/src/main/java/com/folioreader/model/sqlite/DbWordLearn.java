@@ -46,24 +46,25 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        Cursor kayitlar = null;
+        Cursor kayitlar=null;
+        String query="SELECT EXISTS (SELECT * FROM table_name WHERE word='"+wordd+"' LIMIT 1)";
         try {
-            kayitlar = db.rawQuery("SELECT * FROM wordLearnData WHERE word=" + wordd + " ORDER BY id DESC LIMIT 500 ", null);
+            kayitlar = db.rawQuery(query, null);
+            kayitlar.moveToFirst();
         }catch (Exception e){ Toast.makeText(context, "Hata var Ulo", Toast.LENGTH_SHORT).show();}
-        if(kayitlar==null){
-            values.put(KEY_WORD, wordd);
-            values.put(KEY_LEARN, learn);
-            values.put(KEY_LEARNED, learned);
-            db.insert(TABLE_NAME, null, values);
-            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
-        }else{
+        if(kayitlar.getCount()>= 1){
             String idd = kayitlar.getString(kayitlar.getColumnIndex("id"));
             values.put(KEY_LEARN,learn);
             values.put(KEY_LEARNED,learned);
             db.update(TABLE_NAME,values,"id = " + idd,null);
             Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
+        }else{
+            values.put(KEY_WORD, wordd);
+            values.put(KEY_LEARN, learn);
+            values.put(KEY_LEARNED, learned);
+            db.insert(TABLE_NAME, null, values);
+            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
         }
-
         db.close();
     }
 
