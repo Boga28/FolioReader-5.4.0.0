@@ -47,12 +47,11 @@ public class DbWordLearn extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor kayitlar=null;
-        kayitlar.moveToFirst();
-        String query="SELECT EXISTS (SELECT * FROM wordLearnData WHERE word='"+wordd+"' LIMIT 1)";
+        String query="SELECT * FROM "+TABLE_NAME+" WHERE word "+" = "+wordd+" LIMIT 1";
         try {
             kayitlar = db.rawQuery(query, null);
         }catch (Exception e){ Toast.makeText(context, "Hata var Ulo", Toast.LENGTH_SHORT).show();}
-        if(kayitlar.isNull(0)){
+        if(kayitlar.getCount() <= 0){
             values.put(KEY_WORD, wordd);
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
@@ -64,9 +63,10 @@ public class DbWordLearn extends SQLiteOpenHelper {
             values.put(KEY_LEARNED,learned);
             db.update(TABLE_NAME,values,"id = " + idd,null);
             Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
-
         }
         db.close();
     }
+
+
 
 }
