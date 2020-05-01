@@ -64,14 +64,14 @@ public class DbWordLearn extends SQLiteOpenHelper {
             DB_cursor = sqlDB.rawQuery(DB_query, null);
 
             if (DB_cursor.moveToFirst()) {
-                DB_cursor.close();
+                sqlDB.close();
                 return true;
             } else {
-                DB_cursor.close();
+                sqlDB.close();
                 return false;
             }
         } catch (Exception ex) {
-            DB_cursor.close();
+            sqlDB.close();
             return false;
         }
     }
