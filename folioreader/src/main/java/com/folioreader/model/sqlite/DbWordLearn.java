@@ -43,30 +43,28 @@ public class DbWordLearn extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public long addWord(Context context, String wordd, String learn, String learned) {
+    public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        Cursor kayitlar;
-        long id;
-        kayitlar = db.rawQuery("SELECT * FROM wordLearnData WHERE word= "+wordd+" ORDER BY id DESC LIMIT 500 ", null);
-        if(kayitlar!=null){
-            String idd = kayitlar.getString(kayitlar.getColumnIndex("id"));
-            values.put(KEY_LEARN,learn);
-            values.put(KEY_LEARNED,learned);
-            id= db.update(TABLE_NAME,values,"id = " + idd,null);
-            Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: "+ id + "  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
-
-        }else{
-
-
+        Cursor kayitlar = null;
+        try {
+            kayitlar = db.rawQuery("SELECT * FROM wordLearnData WHERE word=" + wordd + " ORDER BY id DESC LIMIT 500 ", null);
+        }catch (Exception e){ Toast.makeText(context, "Hata var Ulo", Toast.LENGTH_SHORT).show();}
+        if(kayitlar==null){
             values.put(KEY_WORD, wordd);
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
-             id = db.insert(TABLE_NAME, null, values);
-            Toast.makeText(context, "Kelime oluşturuldu: " + id + "  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+            db.insert(TABLE_NAME, null, values);
+            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+        }else{
+            String idd = kayitlar.getString(kayitlar.getColumnIndex("id"));
+            values.put(KEY_LEARN,learn);
+            values.put(KEY_LEARNED,learned);
+            db.update(TABLE_NAME,values,"id = " + idd,null);
+            Toast.makeText(context, "Kelime zaten mevcut ve güncellendi: " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_SHORT).show();
         }
+
         db.close();
-        return id;
     }
 
 }
