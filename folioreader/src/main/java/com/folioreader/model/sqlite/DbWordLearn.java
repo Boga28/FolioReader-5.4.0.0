@@ -47,7 +47,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor kayitlar=null;
-        String query="SELECT EXISTS (SELECT * FROM table_name WHERE word='"+wordd+"' LIMIT 1)";
+        String query="SELECT EXISTS (SELECT * FROM wordLearnData WHERE word='"+wordd+"' LIMIT 1)";
         try {
             kayitlar = db.rawQuery(query, null);
             kayitlar.moveToFirst();
