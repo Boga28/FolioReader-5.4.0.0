@@ -47,11 +47,12 @@ public class DbWordLearn extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor kayitlar=null;
+        kayitlar.moveToFirst();
         String query="SELECT EXISTS (SELECT * FROM wordLearnData WHERE word='"+wordd+"' LIMIT 1)";
         try {
             kayitlar = db.rawQuery(query, null);
         }catch (Exception e){ Toast.makeText(context, "Hata var Ulo", Toast.LENGTH_SHORT).show();}
-        if(kayitlar.isNull(-1)){
+        if(kayitlar.isNull(0)){
             values.put(KEY_WORD, wordd);
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
