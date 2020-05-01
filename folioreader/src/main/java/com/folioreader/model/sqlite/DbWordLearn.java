@@ -52,7 +52,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
             kayitlar = db.rawQuery(query, null);
             kayitlar.moveToFirst();
         }catch (Exception e){ Toast.makeText(context, "Hata var Ulo", Toast.LENGTH_SHORT).show();}
-        if(kayitlar.isNull(0)){
+        if(kayitlar.isNull(kayitlar.getPosition())){
             values.put(KEY_WORD, wordd);
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
