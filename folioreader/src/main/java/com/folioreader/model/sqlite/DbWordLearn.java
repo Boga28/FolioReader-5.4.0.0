@@ -45,18 +45,32 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Boolean exist= IsProductExist(wordd);
         ContentValues values = new ContentValues();
-        values.put(KEY_WORD, wordd);
-        values.put(KEY_LEARN, learn);
-        values.put(KEY_LEARNED, learned);
-        db.insert(TABLE_NAME, null, values);
-        Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+        Cursor cursor = null;
+        String sql ="SELECT word FROM "+TABLE_NAME+" WHERE word="+wordd;
+        cursor= db.rawQuery(sql,null);
+        Log.d("Cursor Count : " , String.valueOf(cursor.getCount()));
 
+        if(cursor.getCount()>0){
+            //word Found
+            values.put(KEY_LEARN, learn);
+            values.put(KEY_LEARNED, learned);
+            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+            db.update(TABLE_NAME,values,"word= "+wordd,null);
+        }else{
+            //word Not Found
+            values.put(KEY_WORD, wordd);
+            values.put(KEY_LEARN, learn);
+            values.put(KEY_LEARNED, learned);
+            db.insert(TABLE_NAME, null, values);
+            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+        }
+        cursor.close();
+      //  Boolean exist= IsProductExist(wordd);
         db.close();
     }
 
-    public boolean IsProductExist(String words) {
+    /*public boolean IsProductExist(String words) {
         Cursor DB_cursor = null;
         SQLiteDatabase sqlDB = this.getWritableDatabase();
         try {
@@ -75,6 +89,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
             return false;
         }
     }
+     */
 
 
 }
