@@ -48,8 +48,6 @@ public class DbWordLearn extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         String Query = "select * from wordLearnData where word = ?";
         Cursor cursor = db.rawQuery(Query, new String[]{wordd});
-        String id = cursor.getString(cursor.getColumnIndex("id"));
-
         if (cursor.getCount() <= 0) {
             //word Not Found
             cursor.close();
@@ -61,6 +59,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
         } else {
             //word Found
+            String id = cursor.getString(cursor.getColumnIndex("id"));
             cursor.close();
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
