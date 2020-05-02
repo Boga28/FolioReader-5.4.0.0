@@ -46,7 +46,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        boolean bla = existsColumnInTable(db,TABLE_NAME,KEY_WORD);
+        boolean bla = existsColumnInTable(db,TABLE_NAME,KEY_WORD,wordd);
 
         if(bla){
             //word Found
@@ -66,14 +66,14 @@ public class DbWordLearn extends SQLiteOpenHelper {
         db.close();
     }
 
-    private boolean existsColumnInTable(SQLiteDatabase inDatabase, String inTable, String columnToCheck) {
+    private boolean existsColumnInTable(SQLiteDatabase inDatabase, String inTable, String columnToCheck,String words) {
         Cursor mCursor = null;
         try {
             // Query 1 row
-            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable + " LIMIT 0", null);
+            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable +" WHERE "+ columnToCheck +" LIMIT 0", null);
 
             // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
-            if (mCursor.getColumnIndex(columnToCheck) != -1)
+            if (mCursor.getColumnIndex(words) != -1)
                 return true;
             else
                 return false;
