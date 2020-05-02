@@ -46,16 +46,9 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        Cursor cursor = null;
-        try {
-            String sql ="SELECT * FROM "+TABLE_NAME+" WHERE word="+wordd;
-            cursor.moveToFirst();
-            cursor= db.rawQuery(sql,null);
-        }catch (Exception e){
-            Log.e("Cursor Hatası: ",e.getMessage());
-            cursor.close();
-        }
-        if(cursor!=null){
+        boolean bla = existsColumnInTable(db,TABLE_NAME,KEY_WORD);
+
+        if(bla){
             //word Found
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
@@ -73,26 +66,26 @@ public class DbWordLearn extends SQLiteOpenHelper {
         db.close();
     }
 
-    /*public boolean IsProductExist(String words) {
-        Cursor DB_cursor = null;
-        SQLiteDatabase sqlDB = this.getWritableDatabase();
+    private boolean existsColumnInTable(SQLiteDatabase inDatabase, String inTable, String columnToCheck) {
+        Cursor mCursor = null;
         try {
-            String DB_query = "SELECT * FROM " +TABLE_NAME+ " WHERE word=" + words + ";";
-            DB_cursor = sqlDB.rawQuery(DB_query, null);
+            // Query 1 row
+            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable + " LIMIT 0", null);
 
-            if (DB_cursor.moveToFirst()) {
-                sqlDB.close();
+            // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
+            if (mCursor.getColumnIndex(columnToCheck) != -1)
                 return true;
-            } else {
-                sqlDB.close();
+            else
                 return false;
-            }
-        } catch (Exception ex) {
-            sqlDB.close();
+
+        } catch (Exception Exp) {
+            // Something went wrong. Missing the database? The table?
+            Log.d("existsColumnInTable", "When checking whether a column exists in the table, an error occurred: " + Exp.getMessage());
             return false;
+        } finally {
+            if (mCursor != null) mCursor.close();
         }
     }
-     */
 
 
 }
