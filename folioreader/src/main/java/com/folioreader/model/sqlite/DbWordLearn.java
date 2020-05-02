@@ -46,7 +46,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String Query = "select * from wordLearnData where word = ?";
+        String Query = "select * from wordLearnData where word = ? LIMIT 1";
         Cursor cursor = db.rawQuery(Query, new String[]{wordd});
         if (cursor.getCount() <= 0) {
             //word Not Found
@@ -59,12 +59,11 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
         } else {
             //word Found
-            String id = cursor.getString(cursor.getColumnIndex("id"));
             cursor.close();
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
             Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
-            db.update(TABLE_NAME, values, "id= " + id, null);
+            db.update(TABLE_NAME, values, "word=" + wordd, null);
         }
         db.close();
     }
