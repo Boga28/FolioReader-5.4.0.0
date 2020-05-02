@@ -59,7 +59,6 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
         } else {
             try {
-
             //word Found
             cursor.close();
             values.put(KEY_LEARN, learn);
