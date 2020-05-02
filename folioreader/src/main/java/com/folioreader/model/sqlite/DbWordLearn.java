@@ -63,7 +63,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
                 cursor.close();
                 values.put(KEY_LEARN, learn);
                 values.put(KEY_LEARNED, learned);
-                db.update(TABLE_NAME, values, "word=", new String[]{wordd});
+                db.update(TABLE_NAME, values, "word= ?", new String[]{wordd});
                 Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
             } catch (Exception e) {e.printStackTrace(); }
         }
