@@ -58,12 +58,14 @@ public class DbWordLearn extends SQLiteOpenHelper {
             Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
 
         } else {
+            try {
+
             //word Found
             cursor.close();
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
             Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
-            db.update(TABLE_NAME, values, "word=" + wordd, null);
+            db.update(TABLE_NAME, values, "word=", new String[]{wordd});}catch (Exception e){}
         }
         db.close();
     }
