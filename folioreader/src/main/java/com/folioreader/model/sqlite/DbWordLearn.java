@@ -59,26 +59,15 @@ public class DbWordLearn extends SQLiteOpenHelper {
 
         } else {
             try {
-            //word Found
-            cursor.close();
-            values.put(KEY_LEARN, learn);
-            values.put(KEY_LEARNED, learned);
-            Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
-            db.update(TABLE_NAME, values, "word=", new String[]{wordd});}catch (Exception e){}
+                //word Found
+                cursor.close();
+                values.put(KEY_LEARN, learn);
+                values.put(KEY_LEARNED, learned);
+                db.update(TABLE_NAME, values, "word=", new String[]{wordd});
+                Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {e.printStackTrace(); }
         }
         db.close();
-    }
-
-    public boolean CheckIsDataAlreadyInDBorNot(String fieldValue) {
-        SQLiteDatabase sqldb = this.getWritableDatabase();
-        String Query = "select * from wordLearnData where word = ?";
-        Cursor cursor = sqldb.rawQuery(Query, new String[]{fieldValue});
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
     }
 
 
