@@ -69,7 +69,6 @@ public class DbWordLearn extends SQLiteOpenHelper {
             db.insert(TABLE_NAME, null, values);
             Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
         }
-        cursor.close();
       //  Boolean exist= IsProductExist(wordd);
         db.close();
     }
