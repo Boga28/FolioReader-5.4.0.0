@@ -47,11 +47,15 @@ public class DbWordLearn extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor cursor = null;
-        String sql ="SELECT word FROM "+TABLE_NAME+" WHERE word="+wordd;
-        cursor= db.rawQuery(sql,null);
-        Log.d("Cursor Count : " , String.valueOf(cursor.getCount()));
+        try {
+            String sql ="SELECT * FROM "+TABLE_NAME+" WHERE word="+wordd;
+            cursor= db.rawQuery(sql,null);
+        }catch (Exception e){
+            Toast.makeText(context,""+ e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
-        if(cursor.getCount()>0){
+
+        if(cursor!=null){
             //word Found
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
