@@ -70,7 +70,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
         Cursor mCursor = null;
         try {
             // Query 1 row
-            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable +" WHERE "+ columnToCheck+" ="+words +" LIMIT 1", null);
+            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable +" WHERE "+ columnToCheck+"="+words +" LIMIT 1", null);
 
             // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
             if (mCursor.getColumnIndex(columnToCheck) != -1)

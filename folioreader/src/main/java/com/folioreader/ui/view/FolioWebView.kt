@@ -805,6 +805,7 @@ class FolioWebView : WebView {
     fun onTextSelectionItemContent(selectedText: String?) {
 
         viewTextSelection.tv_word.setText(selectedText)
+        viewTextSelection.tv_wordTR.setText("Translating...")
         UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR)
 
     }
