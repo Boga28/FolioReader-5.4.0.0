@@ -46,7 +46,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        boolean bla =CheckIsDataAlreadyInDBorNot(TABLE_NAME,KEY_WORD,wordd);
+        boolean bla =CheckIsDataAlreadyInDBorNot(wordd);
 
         if(bla){
             //word Found
@@ -66,11 +66,10 @@ public class DbWordLearn extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean CheckIsDataAlreadyInDBorNot(String TableName,
-                                                      String dbfield, String fieldValue) {
+    public boolean CheckIsDataAlreadyInDBorNot( String fieldValue) {
         SQLiteDatabase sqldb = this.getWritableDatabase();
-        String Query = "Select * from " + TableName + " where " + dbfield + " = " + fieldValue;
-        Cursor cursor = sqldb.rawQuery(Query, null);
+        String Query = "select * from wordLearnData where word = ?";
+        Cursor cursor = sqldb.rawQuery(Query, new String[]{fieldValue});
         if(cursor.getCount() <= 0){
             cursor.close();
             return false;
