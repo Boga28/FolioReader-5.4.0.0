@@ -46,7 +46,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        boolean bla = existsColumnInTable(db,TABLE_NAME,wordd);
+        boolean bla =CheckIsDataAlreadyInDBorNot(TABLE_NAME,KEY_WORD,wordd);
 
         if(bla){
             //word Found
@@ -66,25 +66,17 @@ public class DbWordLearn extends SQLiteOpenHelper {
         db.close();
     }
 
-    private boolean existsColumnInTable(SQLiteDatabase inDatabase, String inTable, String columnToCheck) {
-        Cursor mCursor = null;
-        try {
-            // Query 1 row
-            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable + " LIMIT 1", null);
-
-            // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
-            if (mCursor.getColumnIndex(columnToCheck) != -1)
-                return true;
-            else
-                return false;
-
-        } catch (Exception Exp) {
-            // Something went wrong. Missing the database? The table?
-            Log.d("existsColumnInTable", "When checking whether a column exists in the table, an error occurred: " + Exp.getMessage());
+    public boolean CheckIsDataAlreadyInDBorNot(String TableName,
+                                                      String dbfield, String fieldValue) {
+        SQLiteDatabase sqldb = this.getWritableDatabase();
+        String Query = "Select * from " + TableName + " where " + dbfield + " = " + fieldValue;
+        Cursor cursor = sqldb.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
             return false;
-        } finally {
-            if (mCursor != null) mCursor.close();
         }
+        cursor.close();
+        return true;
     }
 
 
