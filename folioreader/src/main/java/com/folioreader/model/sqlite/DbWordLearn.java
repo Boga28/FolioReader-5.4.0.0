@@ -46,31 +46,35 @@ public class DbWordLearn extends SQLiteOpenHelper {
     public void addWord(Context context, String wordd, String learn, String learned) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        boolean bla =CheckIsDataAlreadyInDBorNot(wordd);
+        String Query = "select * from wordLearnData where word = ?";
+        Cursor cursor = db.rawQuery(Query, new String[]{wordd});
+        String id = cursor.getString(cursor.getColumnIndex("id"));
 
-        if(bla){
-            //word Found
-            values.put(KEY_LEARN, learn);
-            values.put(KEY_LEARNED, learned);
-            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
-            db.update(TABLE_NAME,values,"word= "+wordd,null);
-        }else{
+        if (cursor.getCount() <= 0) {
             //word Not Found
+            cursor.close();
             values.put(KEY_WORD, wordd);
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
             db.insert(TABLE_NAME, null, values);
             Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+
+        } else {
+            //word Found
+            cursor.close();
+            values.put(KEY_LEARN, learn);
+            values.put(KEY_LEARNED, learned);
+            Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
+            db.update(TABLE_NAME, values, "id= " + id, null);
         }
-      //  Boolean exist= IsProductExist(wordd);
         db.close();
     }
 
-    public boolean CheckIsDataAlreadyInDBorNot( String fieldValue) {
+    public boolean CheckIsDataAlreadyInDBorNot(String fieldValue) {
         SQLiteDatabase sqldb = this.getWritableDatabase();
         String Query = "select * from wordLearnData where word = ?";
         Cursor cursor = sqldb.rawQuery(Query, new String[]{fieldValue});
-        if(cursor.getCount() <= 0){
+        if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
         }
