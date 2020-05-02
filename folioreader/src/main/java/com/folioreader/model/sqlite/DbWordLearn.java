@@ -49,12 +49,12 @@ public class DbWordLearn extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             String sql ="SELECT * FROM "+TABLE_NAME+" WHERE word="+wordd;
+            cursor.moveToFirst();
             cursor= db.rawQuery(sql,null);
         }catch (Exception e){
-            Toast.makeText(context,""+ e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("Cursor Hatası: ",e.getMessage());
+            cursor.close();
         }
-
-
         if(cursor!=null){
             //word Found
             values.put(KEY_LEARN, learn);
