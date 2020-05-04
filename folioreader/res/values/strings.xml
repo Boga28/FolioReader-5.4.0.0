@@ -1,11 +1,11 @@
 <resources>
 
     <string name="app_name">FolioReader</string>
-    <!-- Real Adsense-->
+    <!-- Real Adsense
     <string name="ads_banner_foliact" translatable="false">ca-app-pub-3405044999727097/4131423720</string>
-
-    <!-- Test Adsense
-    <string name="ads_banner_foliact" translatable="false">ca-app-pub-3940256099942544/6300978111</string>-->
+-->
+    <!-- Test Adsense-->
+    <string name="ads_banner_foliact" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 
 
 
