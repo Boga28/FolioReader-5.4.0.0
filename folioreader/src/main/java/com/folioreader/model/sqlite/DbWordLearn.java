@@ -55,7 +55,6 @@ public class DbWordLearn extends SQLiteOpenHelper {
             values.put(KEY_LEARN, learn);
             values.put(KEY_LEARNED, learned);
             db.insert(TABLE_NAME, null, values);
-            Toast.makeText(context, "Kelime oluşturuldu:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
 
         } else {
             try {
@@ -64,8 +63,7 @@ public class DbWordLearn extends SQLiteOpenHelper {
                 values.put(KEY_LEARN, learn);
                 values.put(KEY_LEARNED, learned);
                 db.update(TABLE_NAME, values, "word= ?", new String[]{wordd});
-                Toast.makeText(context, "Kelime Gücellendi:  " + wordd + " :  " + learn + "  :  " + learned, Toast.LENGTH_LONG).show();
-            } catch (Exception e) {e.printStackTrace(); }
+           } catch (Exception e) {e.printStackTrace(); }
         }
         db.close();
     }

@@ -841,6 +841,7 @@ class FolioPageFragment : Fragment(),
         super.onDestroy()
 
         if (isCurrentFragment) {
+
             if (outState != null)
                 outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
             if (activity != null && !activity!!.isFinishing && lastReadLocator != null)
