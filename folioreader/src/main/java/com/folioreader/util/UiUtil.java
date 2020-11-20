@@ -362,10 +362,16 @@ public class UiUtil {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
         String[] bol = tv_copy.split(".");
-        tv_word.setText(bol[0]);
+        if(bol.length==0){
+            tv_word.setText(tv_copy);
+        }else{
+            tv_word.setText(bol[0]);
+            tv_copy=bol[0];
+        }
+
         String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
                 "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
-                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + bol[0] + "&" +
+                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
                 "lang=en-" + Languages() + "&[format=plain]&[options=1]&[callback=set]";//The API service URL
         final String response1 = "";
         OkHttpClient client = new OkHttpClient();
