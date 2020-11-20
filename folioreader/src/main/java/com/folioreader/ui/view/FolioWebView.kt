@@ -317,7 +317,6 @@ class FolioWebView : WebView {
             loadUrl("javascript:deleteThisHighlight()")
         }
         viewTextSelection.tv_wordTR.setOnClickListener {
-            dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
 
