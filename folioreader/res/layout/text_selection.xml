@@ -65,7 +65,8 @@
                         android:padding="5dp"
                         android:text="Translating..."
                         android:textIsSelectable="true"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:clickable="true"/>
 
 
                 </LinearLayout>
