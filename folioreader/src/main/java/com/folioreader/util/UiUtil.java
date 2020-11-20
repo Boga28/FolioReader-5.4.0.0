@@ -362,7 +362,7 @@ public class UiUtil {
         if(bol.length==0){
             tv_word.setText(tv_copy);
         }else{
-            tv_word.setText(bol[0]);
+            tv_word.setText(bol[0]+".");
         }
     }
     public static void translate(final Context context, String tv_copy, final TextView tv_wordTR,  final TextView tv_word) {
@@ -372,7 +372,7 @@ public class UiUtil {
         if(bol.length==0){
             tv_word.setText(tv_copy);
         }else{
-            tv_word.setText(bol[0]);
+            tv_word.setText(bol[0]+".");
             tv_copy=bol[0];
         }
 

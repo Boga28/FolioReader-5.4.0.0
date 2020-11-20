@@ -62,7 +62,7 @@
                         android:gravity="center"
                         android:maxLines="3"
                         android:padding="5dp"
-                        android:text="Translating It!"
+                        android:text="Translate It!"
                         android:textIsSelectable="true"
                         android:textSize="14sp"
                         style="@style/TextViewTextSelector"/>

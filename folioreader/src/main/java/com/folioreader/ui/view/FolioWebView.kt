@@ -333,12 +333,18 @@ class FolioWebView : WebView {
         viewTextSelection.tv_wordTR.setOnClickListener {
             loadUrl("javascript:onTextSelectionItemClicked1(${it.id})")
         }
+        viewTextSelection.tv_word.setOnClickListener {
+            loadUrl("javascript:onTextSelectionItemClicked1(${it.id})")
+        }
     }
 
     @JavascriptInterface
     fun onTextSelectionItemClicked1(id: Int, selectedText: String?) {
         when (id) {
             R.id.tv_wordTR -> {
+                UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
+            }
+            R.id.tv_word -> {
                 UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
             } else -> {
             Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
@@ -818,7 +824,7 @@ class FolioWebView : WebView {
     @JavascriptInterface
     fun onTextSelectionItemContent(selectedText: String?) {
         UiUtil.bol(selectedText,  viewTextSelection.tv_word)
-        viewTextSelection.tv_wordTR.setText("Translating It!")
+        viewTextSelection.tv_wordTR.setText("\n\n"+"Translate It!"+"\n\n")
         /*
         UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)*/
 
