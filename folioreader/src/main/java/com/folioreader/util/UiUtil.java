@@ -357,7 +357,14 @@ public class UiUtil {
         return null;
     }
 
-
+    public static void bol(final Context context, String tv_copy, final TextView tv_word) {
+        String[] bol = tv_copy.split("\\.");
+        if(bol.length==0){
+            tv_word.setText(tv_copy);
+        }else{
+            tv_word.setText(bol[0]);
+        }
+    }
     public static void translate(final Context context, String tv_copy, final TextView tv_wordTR,  final TextView tv_word) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();

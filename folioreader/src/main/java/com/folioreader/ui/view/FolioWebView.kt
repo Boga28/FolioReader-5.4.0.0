@@ -333,13 +333,16 @@ class FolioWebView : WebView {
         viewTextSelection.tv_wordTR.setOnClickListener {
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+        viewTextSelection.tv_word.setOnClickListener {
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
     }
 
 
 
     @JavascriptInterface
     fun onTextSelectionItemClicked(id: Int, selectedText: String?) {
-        uiHandler.post { loadUrl("javascript:clearSelection()") }
+
 
 
         when (id) {
@@ -359,15 +362,17 @@ class FolioWebView : WebView {
                 uiHandler.post { showDictDialog(selectedText) }
             }
             R.id.tv_wordTR -> {
-                viewTextSelection.tv_word.setText(selectedText)
-                viewTextSelection.tv_wordTR.setText("Translate it!")
                 UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
-
             }
+            R.id.tv_word -> {
+                UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
+            }
+
             else -> {
                 Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
             }
         }
+        uiHandler.post { loadUrl("javascript:clearSelection()") }
     }
 
     private fun showDictDialog(selectedText: String?) {
@@ -813,9 +818,8 @@ class FolioWebView : WebView {
 
     @JavascriptInterface
     fun onTextSelectionItemContent(selectedText: String?) {
-
-        /*viewTextSelection.tv_word.setText(selectedText)
-        viewTextSelection.tv_wordTR.setText("Translating...")
+        UiUtil.bol(context,selectedText,  viewTextSelection.tv_wordTR)
+        /*
         UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)*/
 
     }
