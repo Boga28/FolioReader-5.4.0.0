@@ -331,7 +331,7 @@ class FolioWebView : WebView {
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
         viewTextSelection.tv_wordTR.setOnClickListener {
-            loadUrl("javascript:onTextSelectionItemClicked1")
+            loadUrl("javascript:onTextSelectionItemClicked1(${it.id})")
         }
     }
 
