@@ -316,9 +316,7 @@ class FolioWebView : WebView {
             loadUrl("javascript:clearSelection()")
             loadUrl("javascript:deleteThisHighlight()")
         }
-        viewTextSelection.tv_wordTR.setOnClickListener {
-            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
-        }
+
 
         viewTextSelection.copySelection.setOnClickListener {
             dismissPopupWindow()
@@ -332,6 +330,9 @@ class FolioWebView : WebView {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+        viewTextSelection.tv_wordTR.setOnClickListener {
+            loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
     }
 
 
@@ -342,12 +343,7 @@ class FolioWebView : WebView {
 
 
         when (id) {
-            R.id.tv_wordTR -> {
-                viewTextSelection.tv_word.setText(selectedText)
-                viewTextSelection.tv_wordTR.setText("Translate it!")
-                UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
 
-            }
             R.id.copySelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> copySelection -> $selectedText")
                 UiUtil.copyToClipboard(context, selectedText)
@@ -362,7 +358,12 @@ class FolioWebView : WebView {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")
                 uiHandler.post { showDictDialog(selectedText) }
             }
+            R.id.tv_wordTR -> {
+                viewTextSelection.tv_word.setText(selectedText)
+                viewTextSelection.tv_wordTR.setText("Translate it!")
+                UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
 
+            }
             else -> {
                 Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
             }

@@ -55,7 +55,6 @@
 
                     <TextView
                         android:id="@+id/tv_wordTR"
-                        style="@style/TextViewTextSelector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -63,10 +62,10 @@
                         android:gravity="center"
                         android:maxLines="3"
                         android:padding="5dp"
-                        android:text="Translating..."
+                        android:text="Translating It!"
                         android:textIsSelectable="true"
                         android:textSize="14sp"
-                        android:clickable="true"/>
+                        style="@style/TextViewTextSelector"/>
 
 
                 </LinearLayout>
