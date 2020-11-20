@@ -357,7 +357,7 @@ public class UiUtil {
         return null;
     }
 
-    public static void bol(final Context context, String tv_copy, final TextView tv_word) {
+    public static void bol( String tv_copy, final TextView tv_word) {
         String[] bol = tv_copy.split("\\.");
         if(bol.length==0){
             tv_word.setText(tv_copy);
