@@ -358,12 +358,14 @@ public class UiUtil {
     }
 
 
-    public static void translate(final Context context, String tv_copy, final TextView tv_wordTR) {
+    public static void translate(final Context context, String tv_copy, final TextView tv_wordTR,  final TextView tv_word) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
+        String[] bol = tv_copy.split(".");
+        tv_wordTR.setText(tv_copy);
         String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
                 "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
-                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
+                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + bol[0] + "&" +
                 "lang=en-" + Languages() + "&[format=plain]&[options=1]&[callback=set]";//The API service URL
         final String response1 = "";
         OkHttpClient client = new OkHttpClient();
@@ -408,20 +410,25 @@ public class UiUtil {
     }
 
     public static String Languages() {
-        String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs", "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd", "gl", "gu", "he", "hi", "hr", "ht", "hu", "hy", "id", "is", "it", "ja", "jv", "ka", "kk", "km", "kn", "ko", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mhr", "mi", "mk", "ml", "mn", "mr", "mrj", "ms", "mt", "my", "ne", "nl", "no", "pa", "pap", "pl", "pt", "ro", "ru", "sah", "si", "sk", "sl", "sq", "sr", "su", "sv", "sw", "ta", "te", "tg", "th",
+        String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs",
+                "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd",
+                "gl", "gu", "he", "hi", "hr", "ht", "hu", "hy", "id", "is", "it", "ja", "jv", "ka", "kk",
+                "km", "kn", "ko", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mhr", "mi", "mk", "ml", "mn",
+                "mr", "mrj", "ms", "mt", "my", "ne", "nl", "no", "pa", "pap", "pl", "pt", "ro", "ru", "sah",
+                "si", "sk", "sl", "sq", "sr", "su", "sv", "sw", "ta", "te", "tg", "th",
                 "tl", "tr", "tt", "udm", "uk", "ur", "uz", "vi", "xh", "yi", "zh"};
 
         String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
         targetlanguage = targetlanguage.replace(" ", "");
         Log.d("dil:", targetlanguage);
-        int dilIndex = 1500;
+        int dilIndex = 150;
         for (int i = 0; i < targetLanguages.length; i++) {
             if (targetlanguage.contains(targetLanguages[i])) {
                 targetlanguage = targetLanguages[i];
                 dilIndex = i;
             }
         }
-        if (dilIndex == 1500) {
+        if (dilIndex == 150) {
             targetlanguage = "en";
         } else if (targetlanguage.contains(targetLanguages[dilIndex])) {
             targetlanguage = targetLanguages[dilIndex];
