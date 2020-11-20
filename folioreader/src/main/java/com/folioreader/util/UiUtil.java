@@ -414,7 +414,55 @@ public class UiUtil {
         }
 
     }
+    public static void translate1(final Context context, String tv_copy, final TextView tv_wordTR) {
+        // String tv_copy = "";
+        // tv_copy = tv_word.getText().toString();
+       
+        String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
+                "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
+                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
+                "lang=en-" + Languages() + "&[format=plain]&[options=1]&[callback=set]";//The API service URL
+        final String response1 = "";
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Request request = new Request.Builder()
+                    .url(getURL)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println(e.getMessage());
+                }
 
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    final JSONObject jsonResult;
+                    final String result = response.body().string();
+                    try {
+                        jsonResult = new JSONObject(result);
+                        JSONArray convertedTextArray = jsonResult.getJSONArray("text");
+                        final String convertedText = convertedTextArray.get(0).toString();
+                        Log.d("okHttp", jsonResult.toString());
+
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Code for the UiThread
+                                tv_wordTR.setText(convertedText);
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            tv_wordTR.setText(ex.getMessage());
+
+        }
+
+    }
     public static String Languages() {
         String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs",
                 "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd",
