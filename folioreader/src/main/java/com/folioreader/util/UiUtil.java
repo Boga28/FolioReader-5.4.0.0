@@ -414,10 +414,13 @@ public class UiUtil {
         }
 
     }
+
+
+
     public static void translate1(final Context context, String tv_copy, final TextView tv_wordTR) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
-       
+
         String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
                 "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
                 "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
@@ -442,6 +445,60 @@ public class UiUtil {
                         jsonResult = new JSONObject(result);
                         JSONArray convertedTextArray = jsonResult.getJSONArray("text");
                         final String convertedText = convertedTextArray.get(0).toString();
+                        Log.d("okHttp", jsonResult.toString());
+
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Code for the UiThread
+                                tv_wordTR.setText(convertedText);
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            tv_wordTR.setText(ex.getMessage());
+
+        }
+
+    }
+    public static void dictionary1(final Context context, String words, final TextView tv_wordTR) {
+        // String tv_copy = "";
+        // tv_copy = tv_word.getText().toString();
+        String getURL = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?" +
+                "key=dict.1.1.20200418T104453Z.fb4793ce25afff5a.88a2d7e5cadf7ed8a33bd25512f0eb7277809c12&lang=en-" +Languages() + "&text=" + words;//The API service URL
+
+        final String response1 = "";
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Request request = new Request.Builder()
+                    .url(getURL)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    final JSONObject jsonResult;
+                    final String result = response.body().string();
+                    try {
+                        jsonResult = new JSONObject(result);
+                        JSONArray jsonArrayDef = jsonResult.getJSONArray("def");
+                        JSONObject def = jsonArrayDef.getJSONObject(0);
+                        String text = def.getString("text");
+                        String pos = def.getString("pos");
+                        String ts = def.getString("ts");
+                        JSONArray jsonArrayTr = def.getJSONArray("tr");
+                        JSONObject Tr = jsonArrayTr.getJSONObject(0);
+
+                        final String convertedText =  Tr.getString("text").toString();
                         Log.d("okHttp", jsonResult.toString());
 
                         ((Activity) context).runOnUiThread(new Runnable() {
