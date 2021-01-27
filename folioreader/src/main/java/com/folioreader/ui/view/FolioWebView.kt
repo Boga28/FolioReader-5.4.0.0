@@ -353,7 +353,7 @@ class FolioWebView : WebView {
 
         when (id) {
             R.id.tv_wordTR -> {
-                //UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
+                //UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_word, viewTextSelection.tv_wordTR,myDialog)
                 //UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
             }
             R.id.tv_word -> {
@@ -406,7 +406,7 @@ class FolioWebView : WebView {
         myDialog.setContentView(R.layout.word_trans_pop_folio)
         myDialog.window
             .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
+        UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_word, viewTextSelection.tv_wordTR,myDialog)
     }
 
     private fun onHighlightColorItemsClicked(style: HighlightStyle, isAlreadyCreated: Boolean) {
