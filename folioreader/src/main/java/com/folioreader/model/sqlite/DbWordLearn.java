@@ -70,4 +70,5 @@ public class DbWordLearn extends SQLiteOpenHelper {
         db.close();
     }
 
+
 }
