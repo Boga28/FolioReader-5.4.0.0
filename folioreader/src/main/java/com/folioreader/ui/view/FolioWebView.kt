@@ -279,6 +279,7 @@ class FolioWebView : WebView {
         Log.v(LOG_TAG, "-> initViewTextSelection")
 
 
+
         val textSelectionMiddleDrawable = ContextCompat.getDrawable(
             context,
             R.drawable.abc_text_select_handle_middle_mtrl_dark
@@ -349,17 +350,14 @@ class FolioWebView : WebView {
 
     @JavascriptInterface
     fun onTextSelectionItemClicked1(id: Int, selectedText: String?) {
-        myDialog = Dialog(context)
-        myDialog.setContentView(R.layout.word_trans_pop_folio)
-        myDialog.window
-            .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         when (id) {
             R.id.tv_wordTR -> {
-                UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
+                //UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
                 //UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
             }
             R.id.tv_word -> {
-                UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
+               //UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
                 //UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
             } else -> {
             Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
@@ -404,6 +402,11 @@ class FolioWebView : WebView {
             parentFragment.fragmentManager!!,
             DictionaryFragment::class.java.name
         )
+        myDialog = Dialog(context)
+        myDialog.setContentView(R.layout.word_trans_pop_folio)
+        myDialog.window
+            .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
     }
 
     private fun onHighlightColorItemsClicked(style: HighlightStyle, isAlreadyCreated: Boolean) {
