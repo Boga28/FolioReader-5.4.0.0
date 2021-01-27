@@ -165,7 +165,7 @@ public class FolioReader {
 
     */
 
-    public FolioReader openBook(int rawId, String bookId) {
+    public FolioReader openBook(int rawId, String bookId ) {
         Intent intent = getIntentFromUrl(null, rawId);
         intent.putExtra(EXTRA_BOOK_ID, bookId);
         context.startActivity(intent);

@@ -20,11 +20,14 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.StateSet;
@@ -41,6 +44,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.folioreader.AppContext;
 import com.folioreader.R;
 import com.folioreader.model.sqlite.DbWordLearn;
@@ -66,7 +70,6 @@ import okhttp3.Response;
  * Created by mahavir on 3/30/16.
  */
 public class UiUtil {
-
 
     private static final String LOG_TAG = UiUtil.class.getSimpleName();
 
@@ -364,6 +367,7 @@ public class UiUtil {
         }else{
             tv_word.setText(bol[0]+".");
         }
+
     }
     public static void translate(final Context context, String tv_copy, final TextView tv_wordTR,  final TextView tv_word) {
         // String tv_copy = "";
@@ -421,9 +425,6 @@ public class UiUtil {
         }
 
     }
-
-
-
     public static void translate1(final Context context, String tv_copy, final TextView tv_wordTR) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
@@ -527,28 +528,6 @@ public class UiUtil {
         }
 
     }
-    public static String dictionaryLanguage() {
-        String[] targetLanguages = {"cs","da","fr","ru","de","it","sk","el","lt","sv","en","lv","tr","es","nl","uk","et","no","fi","pt"};
-
-        String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        targetlanguage = targetlanguage.replace(" ", "");
-        Log.d("dil:", targetlanguage);
-        int dilIndex = 150;
-        for (int i = 0; i < targetLanguages.length; i++) {
-            if (targetlanguage.contains(targetLanguages[i])) {
-                targetlanguage = targetLanguages[i];
-                dilIndex = i;
-            }
-        }
-        if (dilIndex == 150) {
-            targetlanguage = "en";
-        } else if (targetlanguage.contains(targetLanguages[dilIndex])) {
-            targetlanguage = targetLanguages[dilIndex];
-        } else {
-            targetlanguage = "en";
-        }
-        return targetlanguage;
-    }
     public static String Languages() {
         String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs",
                 "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd",
@@ -577,5 +556,271 @@ public class UiUtil {
         }
         return targetlanguage;
     }
+
+    //Spannable dictionary
+    public static String dictionaryLanguage() {
+        String[] targetLanguages = {"cs","da","fr","ru","de","it","sk","el","lt","sv","en","lv","tr","es","nl","uk","et","no","fi","pt"};
+
+        String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
+        targetlanguage = targetlanguage.replace(" ", "");
+        Log.d("dil:", targetlanguage);
+        int dilIndex = 150;
+        for (int i = 0; i < targetLanguages.length; i++) {
+            if (targetlanguage.contains(targetLanguages[i])) {
+                targetlanguage = targetLanguages[i];
+                dilIndex = i;
+            }
+        }
+        if (dilIndex == 150) {
+            targetlanguage = "en";
+        } else if (targetlanguage.contains(targetLanguages[dilIndex])) {
+            targetlanguage = targetLanguages[dilIndex];
+        } else {
+            targetlanguage = "en";
+        }
+        return targetlanguage;
+    }
+
+    public static void getStringClick(final Context context, String textclicker, TextView textview, TextView textview2,Dialog myDialog) {
+        String[] bol = textclicker.split("\\.");
+        if(bol.length==0){
+            textview.setText(textclicker);
+        }else{
+            textview.setText(bol[0]+".");
+            textclicker =bol[0]+".";
+        }
+        textclicker = textclicker.trim();
+        textclicker = textclicker.replace("- ", "-");
+        textclicker = textclicker.replace(" -", "-");
+        textclicker = textclicker.replace(" - ", "-");
+        //Metini cümlelere ayıtmak için (\\.), kelimelere bolmek içinse (Boşluk koyulur).
+        String[] items = textclicker.split(" ");
+        int count = 0;
+        int firstIndex = 0;
+        int lastIndex = 0;
+        int counter = 0; // tranlate mi dictionary mi?
+        SpannableString ss = new SpannableString(textclicker);
+
+        for (String item : items) {
+            lastIndex += item.length() + 1;
+            //Eğer Orjinal metinden büyükse
+            if (lastIndex > textclicker.length()) {
+                lastIndex -= 1;
+            }
+            // Metoda erişme
+            clickler(context,count, firstIndex, lastIndex, items, ss, counter,textview,textview2,myDialog);
+            Log.i("Lo: ", items[count]);
+            firstIndex += item.length() + 1;
+            //Array Sayacı
+            count++;
+        }
+        textview.setText(ss);
+        textview.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+    public static void clickler(final Context context, final int count, int firstIndex, int lastIndex, final String[] items,
+                                SpannableString sss, final int counter, final TextView tv_word, final TextView tv_wordTR, final Dialog myDialog) {
+        //String Kopyalarken . ve virgülü ayırma
+        String[] target = {".", "\"", ",", ":", " -", "- ", " - "};
+        String[] replacement = {"", "", "", "", "-", "-", "-"};
+        for (int i = 0; i < 6; i++) {
+            items[count] = items[count].replace(target[i], replacement[i]);
+        }
+
+
+        //String Ayarı
+        ForegroundColorSpan BLACK = new ForegroundColorSpan(Color.BLACK);
+        BackgroundColorSpan WHITE = new BackgroundColorSpan(Color.WHITE);
+        StyleSpan BOLD = new StyleSpan(Typeface.BOLD);
+
+
+        /* //Kopyalama İşlemi
+        final android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
+        final android.content.ClipData clipData =
+                android.content.ClipData.newPlainText("Text Label", items[count]);
+         */
+
+
+        // Click Arrayı oluşturuldu.
+        ClickableSpan clickableSpan[] = new ClickableSpan[items.length];
+
+        //Click Eventi
+        ClickableSpan clickableSpan1 = new ClickableSpan() {
+            @Override
+            public void onClick(View v) {
+                TextView tv_wordd = (TextView) myDialog.findViewById(R.id.tv_wordd);
+                TextView tv_wordTRR = (TextView) myDialog.findViewById(R.id.tv_wordTRR);
+                translate(context,items[count], counter, tv_wordd, tv_wordTRR);
+                tv_word.setText(items[count]);
+                tv_wordTR.setScrollY(0);
+
+                myDialog.show();
+
+            }
+        };
+        // Ornek Click her Click arrayine kopylandı
+        clickableSpan[count] = clickableSpan1;
+
+
+        // Her bir kelime Click Eventi vs. Ayrıldı
+        sss.setSpan(clickableSpan[count], firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // RENK ve RENK STİLİ AYARLARI
+        // RENK ve RENK STİLİ AYARLARI
+        sss.setSpan(BLACK, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sss.setSpan(BOLD, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sss.setSpan(WHITE, firstIndex, lastIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sss.setSpan(new UnderlineSpan() {
+            public void updateDrawState(TextPaint tp) {
+                tp.setUnderlineText(false);
+
+            }
+        }, firstIndex, lastIndex, 0);
+    }
+
+    public static void translate(final Context context, String word, int counter, TextView tv_word, TextView tv_wordTR) {
+        word = word.replace(" ", "");
+        String words = "";
+        if (counter > 2) {
+            counter = 0;
+        }
+        if (word.length() > 3) {
+            if (counter == 0) {
+                words = word + "";
+                tv_word.setText(words);
+            } else if (counter == 1) {
+                words = word.substring(0, word.length() - 1);
+                tv_word.setText(words);
+            } else if (counter == 2) {
+                words = word.substring(0, word.length() - 2);
+                tv_word.setText(words);
+            } else if (counter > 2) {
+                words = word;
+                tv_word.setText(words);
+            }
+
+        } else {
+            words = word;
+            tv_word.setText(words);
+        }
+
+
+        Log.d("Word: ", words);
+        String getURL = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?" +
+                "key=dict.1.1.20200418T104453Z.fb4793ce25afff5a.88a2d7e5cadf7ed8a33bd25512f0eb7277809c12&lang=en-" + UiUtil.Languages() + "&text=" + words;//The API service URL
+        counter++;
+        dictionary (context, counter, word, tv_wordTR);
+
+    }
+
+
+
+    public static void dictionary(final Context context, final int counter, String words, final TextView tv_wordTR) {
+        // String tv_copy = "";
+        // tv_copy = tv_word.getText().toString();
+        String getURL = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?" +
+                "key=dict.1.1.20200418T104453Z.fb4793ce25afff5a.88a2d7e5cadf7ed8a33bd25512f0eb7277809c12&lang=en-" +dictionaryLanguage() + "&text=" + words;//The API service URL
+
+        final String response1 = "";
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Request request = new Request.Builder()
+                    .url(getURL)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    final JSONObject jsonResult;
+                    final String result = response.body().string();
+                    try {
+                        jsonResult = new JSONObject(result);
+
+                        JSONArray jsonArrayDef = jsonResult.getJSONArray("def");
+                        if (jsonArrayDef.length() > 0) {
+                            for (int i = 0; i < jsonArrayDef.length(); i++) {
+                                JSONObject def = jsonArrayDef.getJSONObject(i);
+                                String text = def.getString("text");
+                                String pos = def.getString("pos");
+                                String ts = def.getString("ts");
+                                JSONArray jsonArrayTr = def.getJSONArray("tr");
+                                tv_wordTR.append("™" + pos.toUpperCase() + "\n");
+                                final String[] textMean = {""};
+                                String textTr = "";
+                                String example = "";
+                                String textExDesc = "";
+                                for (int tr = 0; tr < jsonArrayTr.length(); tr++) {
+                                    JSONObject Tr = jsonArrayTr.getJSONObject(tr);
+                                    textTr += Tr.getString("text") + ", ";
+                                    // tv_wordTR.append(""  + textTr + ", ");
+
+                                    if (Tr.has("mean")) {
+                                        JSONArray jsonArrayMean = Tr.getJSONArray("mean");
+                                        if (jsonArrayMean.length() > 0) {
+                                            for (int mean = 0; mean < jsonArrayMean.length(); mean++) {
+                                                JSONObject Mean = jsonArrayMean.getJSONObject(mean);
+                                                textMean[0] += Mean.getString("text") + ", ";
+
+                                            }
+                                        }
+                                    }
+                                    if (Tr.has("ex")) {
+                                        JSONArray jsonArrayEx = Tr.getJSONArray("ex");
+                                        if (jsonArrayEx.length() > 0) {
+                                            for (int ex = 0; ex < jsonArrayEx.length(); ex++) {
+                                                JSONObject Ex = jsonArrayEx.getJSONObject(ex);
+                                                String textEx = Ex.getString("text");
+                                                //tv_wordEX.append("Ex: " + textEx + "\n");
+                                                if (Ex.has("tr")) {
+                                                    JSONArray jsonArrayExDesc = Ex.getJSONArray("tr");
+                                                    for (int exDesc = 0; exDesc < jsonArrayExDesc.length(); exDesc++) {
+                                                        JSONObject ExDesc = jsonArrayExDesc.getJSONObject(exDesc);
+                                                        textExDesc = ExDesc.getString("text");
+                                                        //    tv_wordEX.append("Ex Translate: " + textExDesc + "\n\n");
+                                                    }
+                                                }
+                                                example += "Example: " + textEx + "\n" + "Translate: " + textExDesc + "\n\n";
+                                            }
+                                        }
+                                    }
+
+                                }
+
+
+                                final String finalExample = example;
+                                final String finalTextTr = textTr;
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Code for the UiThread
+                                        tv_wordTR.setTextSize(12);
+                                        if (textMean[0] != "") {
+                                            textMean[0] = "Mean: " + textMean[0];
+                                        }
+                                        tv_wordTR.append(finalTextTr + "\n" + textMean[0] + "\n\n");
+                                        tv_wordTR.append(finalExample + "\n");
+                                    }
+                                });
+                            }
+                        }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Exception ex) {
+                    tv_wordTR.setText(ex.getMessage());
+
+                }
+
+            }
+
+
+
+
 
 }

@@ -1,8 +1,11 @@
 package com.folioreader.ui.view
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -77,6 +80,8 @@ class FolioWebView : WebView {
         }
     }
 
+
+    private lateinit var myDialog : Dialog
     private var horizontalPageCount = 0
     private var displayMetrics: DisplayMetrics? = null
     private var density: Float = 0.toFloat()
@@ -107,6 +112,7 @@ class FolioWebView : WebView {
     private var handleHeight: Int = 0
 
     private var lastScrollType: LastScrollType? = null
+
 
     val contentHeightVal: Int
         get() = Math.floor((this.contentHeight * this.scale).toDouble()).toInt()
@@ -337,15 +343,24 @@ class FolioWebView : WebView {
             loadUrl("javascript:onTextSelectionItemClicked1(${it.id})")
         }
     }
+    fun close(view: View) {
+        myDialog.dismiss()
+    }
 
     @JavascriptInterface
     fun onTextSelectionItemClicked1(id: Int, selectedText: String?) {
+        myDialog = Dialog(context)
+        myDialog.setContentView(R.layout.word_trans_pop_folio)
+        myDialog.window
+            .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         when (id) {
             R.id.tv_wordTR -> {
-                UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
+                UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
+                //UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
             }
             R.id.tv_word -> {
-                UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
+                UiUtil.getStringClick(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word,myDialog)
+                //UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
             } else -> {
             Log.w(LOG_TAG, "-> onTextSelectionItemClicked -> unknown id = $id")
         }
