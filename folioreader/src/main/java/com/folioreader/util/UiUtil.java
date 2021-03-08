@@ -419,11 +419,40 @@ public class UiUtil {
             tv_wordTR.setText(ex.getMessage());
 
         }
+        tv_word.setClickable(false);
+        tv_wordTR.setClickable(false);
 
     }
 
 
+    public static String Languages() {
+        String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs",
+                "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd",
+                "gl", "gu", "he", "hi", "hr", "ht", "hu", "hy", "id", "is", "it", "ja", "jv", "ka", "kk",
+                "km", "kn", "ko", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mhr", "mi", "mk", "ml", "mn",
+                "mr", "mrj", "ms", "mt", "my", "ne", "nl", "no", "pa", "pap", "pl", "pt", "ro", "ru", "sah",
+                "si", "sk", "sl", "sq", "sr", "su", "sv", "sw", "ta", "te", "tg", "th",
+                "tl", "tr", "tt", "udm", "uk", "ur", "uz", "vi", "xh", "yi", "zh"};
 
+        String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
+        targetlanguage = targetlanguage.replace(" ", "");
+        Log.d("dil:", targetlanguage);
+        int dilIndex = 150;
+        for (int i = 0; i < targetLanguages.length; i++) {
+            if (targetlanguage.contains(targetLanguages[i])) {
+                targetlanguage = targetLanguages[i];
+                dilIndex = i;
+            }
+        }
+        if (dilIndex == 150) {
+            targetlanguage = "en";
+        } else if (targetlanguage.contains(targetLanguages[dilIndex])) {
+            targetlanguage = targetLanguages[dilIndex];
+        } else {
+            targetlanguage = "en";
+        }
+        return targetlanguage;
+    }
     public static void translate1(final Context context, String tv_copy, final TextView tv_wordTR) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
@@ -528,7 +557,9 @@ public class UiUtil {
 
     }
     public static String dictionaryLanguage() {
-        String[] targetLanguages = {"cs","da","fr","ru","de","it","sk","el","lt","sv","en","lv","tr","es","nl","uk","et","no","fi","pt"};
+
+        String[] targetLanguages = {"cs","da","de","el","es","et","fi","fr","en","it","lt","lv"
+                                    ,"nl","no","pt","ru","sk","sv","tr","uk"};
 
         String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
         targetlanguage = targetlanguage.replace(" ", "");
@@ -549,33 +580,6 @@ public class UiUtil {
         }
         return targetlanguage;
     }
-    public static String Languages() {
-        String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs",
-                "cv", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "ga", "gd",
-                "gl", "gu", "he", "hi", "hr", "ht", "hu", "hy", "id", "is", "it", "ja", "jv", "ka", "kk",
-                "km", "kn", "ko", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mhr", "mi", "mk", "ml", "mn",
-                "mr", "mrj", "ms", "mt", "my", "ne", "nl", "no", "pa", "pap", "pl", "pt", "ro", "ru", "sah",
-                "si", "sk", "sl", "sq", "sr", "su", "sv", "sw", "ta", "te", "tg", "th",
-                "tl", "tr", "tt", "udm", "uk", "ur", "uz", "vi", "xh", "yi", "zh"};
 
-        String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        targetlanguage = targetlanguage.replace(" ", "");
-        Log.d("dil:", targetlanguage);
-        int dilIndex = 150;
-        for (int i = 0; i < targetLanguages.length; i++) {
-            if (targetlanguage.contains(targetLanguages[i])) {
-                targetlanguage = targetLanguages[i];
-                dilIndex = i;
-            }
-        }
-        if (dilIndex == 150) {
-            targetlanguage = "en";
-        } else if (targetlanguage.contains(targetLanguages[dilIndex])) {
-            targetlanguage = targetLanguages[dilIndex];
-        } else {
-            targetlanguage = "en";
-        }
-        return targetlanguage;
-    }
 
 }

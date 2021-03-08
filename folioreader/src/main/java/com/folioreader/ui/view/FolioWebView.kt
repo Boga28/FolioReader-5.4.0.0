@@ -343,6 +343,7 @@ class FolioWebView : WebView {
         when (id) {
             R.id.tv_wordTR -> {
                 UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
+
             }
             R.id.tv_word -> {
                 UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
