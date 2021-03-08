@@ -827,6 +827,7 @@ function onTextSelectionItemClicked(id) {
     FolioWebView.onTextSelectionItemClicked(id, selectedText);
 }
 function onTextSelectionItemClicked1(id) {
+    try {
     var selectionType = window.getSelection().type;
     var selectedText = "";
     if (selectionType == "Range") {
@@ -835,6 +836,7 @@ function onTextSelectionItemClicked1(id) {
         selectedText = thisHighlight.textContent;
     }
     FolioWebView.onTextSelectionItemClicked1(id, selectedText);
+    catch(Exception e){}
 }
 function onTextSelectionItemContent() {
     var selectionType = window.getSelection().type;
