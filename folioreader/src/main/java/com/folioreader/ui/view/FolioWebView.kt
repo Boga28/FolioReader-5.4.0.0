@@ -336,6 +336,7 @@ class FolioWebView : WebView {
         viewTextSelection.tv_word.setOnClickListener {
             loadUrl("javascript:onTextSelectionItemClicked1(${it.id})")
         }
+       UiUtil.notClickable(viewTextSelection.tv_wordTR,viewTextSelection.tv_word)
     }
 
     @JavascriptInterface
@@ -343,7 +344,6 @@ class FolioWebView : WebView {
         when (id) {
             R.id.tv_wordTR -> {
                 UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)
-
             }
             R.id.tv_word -> {
                 UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)

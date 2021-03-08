@@ -423,7 +423,10 @@ public class UiUtil {
         tv_wordTR.setClickable(false);
 
     }
-
+    public static void notClickable(final TextView tv_wordTR,  final TextView tv_word){
+        tv_word.setClickable(true);
+        tv_wordTR.setClickable(true);
+    }
 
     public static String Languages() {
         String[] targetLanguages = {"af", "am", "ar", "az", "ba", "be", "bg", "bn", "bs", "ca", "ceb", "cs",
