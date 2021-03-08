@@ -370,7 +370,7 @@ public class UiUtil {
         // tv_copy = tv_word.getText().toString();
         String[] bol = tv_copy.split("\\.");
         if(bol.length==0){
-            tv_word.setText(tv_copy);
+            tv_word.setText(tv_copy+".");
         }else{
             tv_word.setText(bol[0]+".");
             tv_copy=bol[0];
