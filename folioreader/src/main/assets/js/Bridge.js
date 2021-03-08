@@ -836,7 +836,7 @@ function onTextSelectionItemClicked1(id) {
         selectedText = thisHighlight.textContent;
     }
     FolioWebView.onTextSelectionItemClicked1(id, selectedText);
-    catch(Exception e){}
+    }catch(Exception e){}
 }
 function onTextSelectionItemContent() {
     var selectionType = window.getSelection().type;
