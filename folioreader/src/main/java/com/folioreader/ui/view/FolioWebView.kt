@@ -336,7 +336,7 @@ class FolioWebView : WebView {
         viewTextSelection.tv_word.setOnClickListener {
             loadUrl("javascript:onTextSelectionItemClicked1(${it.id})")
         }
-       UiUtil.notClickable(viewTextSelection.tv_wordTR,viewTextSelection.tv_word)
+
     }
 
     @JavascriptInterface
@@ -828,7 +828,7 @@ class FolioWebView : WebView {
         viewTextSelection.tv_wordTR.setText("\n\n"+"Translate It!"+"\n\n")
         /*
         UiUtil.translate(context,selectedText,viewTextSelection.tv_wordTR, viewTextSelection.tv_word)*/
-
+        UiUtil.notClickable(viewTextSelection.tv_wordTR,viewTextSelection.tv_word)
     }
 
     private fun showTextSelectionPopup() {
