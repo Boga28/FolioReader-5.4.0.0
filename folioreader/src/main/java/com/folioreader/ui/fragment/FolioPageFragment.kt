@@ -106,6 +106,9 @@ class FolioPageFragment : Fragment(),
     private var mMinutesLeftTextView: TextView? = null
     private var mActivityCallback: FolioActivityCallback? = null
 
+    public var currentPage:Int=0
+    public var totalPages:Int=0
+
     private var mTotalMinutes: Int = 0
     private var mFadeInAnimation: Animation? = null
     private var mFadeOutAnimation: Animation? = null
@@ -589,7 +592,7 @@ class FolioPageFragment : Fragment(),
     }
 
     fun getLastReadLocator(): ReadLocator? {
-        Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem.href!!)
+        Log.v(LOG_TAG, "-> getLastReadLocator -> " + spineItem.href!!+"-"+currentPage+"-"+totalPages)
         try {
             synchronized(this) {
                 mWebview!!.loadUrl(getString(R.string.callComputeLastReadCfi))
@@ -606,8 +609,8 @@ class FolioPageFragment : Fragment(),
     fun storeLastReadCfi(cfi: String) {
 
         synchronized(this) {
-            var href = spineItem.href
-            if (href == null) href = ""
+            var href = spineItem.href+"-"+currentPage+"-"+totalPages
+            if (href == null) href = ""+"-"+currentPage+"-"+totalPages
             val created = Date().time
             val locations = Locations()
             locations.cfi = cfi
@@ -668,10 +671,10 @@ class FolioPageFragment : Fragment(),
         }
     }
 
-    private fun updatePagesLeftText(scrollY: Int) {
+     fun updatePagesLeftText(scrollY: Int) {
         try {
-            val currentPage = (Math.ceil(scrollY.toDouble() / mWebview!!.webViewHeight) + 1).toInt()
-            val totalPages = Math.ceil(mWebview!!.contentHeightVal.toDouble() / mWebview!!.webViewHeight).toInt()
+             currentPage = (Math.ceil(scrollY.toDouble() / mWebview!!.webViewHeight) + 1).toInt()
+             totalPages = Math.ceil(mWebview!!.contentHeightVal.toDouble() / mWebview!!.webViewHeight).toInt()
             val pagesRemaining = totalPages - currentPage
             val pagesRemainingStrFormat = if (pagesRemaining > 1)
                 getString(R.string.pages_left)

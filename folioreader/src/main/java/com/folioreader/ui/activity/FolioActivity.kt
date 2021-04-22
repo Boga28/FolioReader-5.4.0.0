@@ -110,6 +110,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var mediaSession: MediaSessionCompat? = null
 
 
+
     lateinit var mAdView : AdView
     //private lateinit var mRewardedVideoAd: RewardedVideoAd
     private var bookFileName: String? = null
@@ -1132,6 +1133,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun storeLastReadLocator(lastReadLocator: ReadLocator) {
         Log.v(LOG_TAG, "-> storeLastReadLocator")
+
         this.lastReadLocator = lastReadLocator
     }
 
