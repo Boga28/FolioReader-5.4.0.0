@@ -44,7 +44,7 @@
     <LinearLayout
         android:id="@+id/mediaPlayerLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
@@ -86,18 +86,18 @@
                 android:layout_marginEnd="10dp" />
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/rewind_btn1"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@id/play_btn1"
                 android:src="@drawable/ic_fast_rewind"
                 android:contentDescription="TODO" />
 
@@ -105,7 +105,6 @@
                 android:id="@+id/play_btn1"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_centerInParent="true"
                 android:src="@drawable/ic_play"
                 android:contentDescription="TODO" />
 
@@ -113,7 +112,6 @@
                 android:id="@+id/pause_btn1"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_centerInParent="true"
                 android:src="@drawable/ic_pause"
                 android:visibility="gone"
                 android:contentDescription="TODO" />
@@ -122,32 +120,16 @@
                 android:id="@+id/fforward_btn1"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/play_btn1"
                 android:src="@drawable/ic_fast_forward"
                 android:contentDescription="TODO" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
     </LinearLayout>
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/simpleExoPlayerView"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:visibility="gone"
-        ads:controller_layout_id="@layout/exo_playback_control_view"
-        ads:fastforward_increment="30000"
-        ads:hide_on_touch="false"
-        ads:layout_constraintBottom_toBottomOf="parent"
-        ads:layout_constraintBottom_toTopOf="@+id/adviewLayout"
-        ads:rewind_increment="30000"
-        ads:show_timeout="0"
-        ads:use_artwork="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
     <LinearLayout
         android:id="@+id/adviewLayout"

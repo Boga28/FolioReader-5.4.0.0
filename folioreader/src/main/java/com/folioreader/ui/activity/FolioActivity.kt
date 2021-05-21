@@ -88,15 +88,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.core.os.postDelayed
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import java.util.concurrent.TimeUnit
 
 
@@ -104,11 +95,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     View.OnSystemUiVisibilityChangeListener
     //Odullu Reklam için
     /* ,RewardedVideoAdListener */       {
-  /*
-    private var exoplayerView : SimpleExoPlayerView? = null
-    private var exoplayer : SimpleExoPlayer? = null
-    private var playbackStateBuilder : PlaybackStateCompat.Builder? = null
-    private var mediaSession: MediaSessionCompat? = null */
+
 
     private var seekbar:SeekBar?=null
     private var rewind_btn:ImageView?=null
@@ -365,7 +352,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
         val uri = mAudioLink?.toUri()
 
-      //  exoplayerView = findViewById(R.id.simpleExoPlayerView)
         seekbar = findViewById(R.id.seekbar1)
         rewind_btn = findViewById(R.id.rewind_btn1)
         play_btn = findViewById(R.id.play_btn1)
@@ -447,30 +433,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             ))))
     }
 
-  /*  private fun initializePlayer( mAudiodur:Uri) {
-        val trackSelector = DefaultTrackSelector()
-        exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
-
-        exoplayerView?.player = exoplayer
-
-        val userAgent = Util.getUserAgent(baseContext, "Exo")
-
-        val mediaSource = ExtractorMediaSource(mAudiodur, DefaultDataSourceFactory(baseContext, userAgent), DefaultExtractorsFactory(), null, null)
-
-        exoplayer?.prepare(mediaSource)
-
-        val componentName = ComponentName(baseContext, "Exo")
-        mediaSession = MediaSessionCompat(baseContext, "ExoPlayer", componentName, null)
-
-        playbackStateBuilder = PlaybackStateCompat.Builder()
-
-        playbackStateBuilder?.setActions(PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PAUSE or
-                PlaybackStateCompat.ACTION_FAST_FORWARD)
-
-        mediaSession?.setPlaybackState(playbackStateBuilder?.build())
-        mediaSession?.isActive = true
-
-    }*/
 
 
     fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
@@ -902,6 +864,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+            mediaPlayerLayout.visibility=View.VISIBLE
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             if (appBarLayout != null)
@@ -924,6 +887,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     // Hide the nav bar and status bar
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
+            mediaPlayerLayout.visibility=View.GONE
+
         } else {
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -1012,17 +977,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-    //    releasePlayer()
-    }
-   /*private fun releasePlayer() {
-        if (media != null) {
-            exoplayer?.stop()
-            exoplayer?.release()
-            exoplayer = null
-        }
-    }*/
-    
+        super.onBackPressed()    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (outState != null){
@@ -1041,7 +997,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
-      //  releasePlayer()
+
     }
 
     override fun getCurrentChapterIndex(): Int {
