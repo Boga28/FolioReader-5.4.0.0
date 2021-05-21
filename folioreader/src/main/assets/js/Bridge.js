@@ -826,7 +826,7 @@ function onTextSelectionItemClicked(id) {
     }
     FolioWebView.onTextSelectionItemClicked(id, selectedText);
 }
-function onTextSelectionItemClicked1(id) {
+  /* function onTextSelectionItemClicked1(id) {
 
     var selectionType = window.getSelection().type;
     var selectedText = "";
@@ -838,6 +838,7 @@ function onTextSelectionItemClicked1(id) {
     FolioWebView.onTextSelectionItemClicked1(id, selectedText);
 
 }
+*/
 function onTextSelectionItemContent() {
     var selectionType = window.getSelection().type;
     var selectedText = "";

@@ -39,12 +39,20 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.folioreader.AppContext;
 import com.folioreader.R;
 import com.folioreader.model.sqlite.DbWordLearn;
 import com.folioreader.ui.view.UnderlinedTextView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -426,6 +434,71 @@ public class UiUtil {
     public static void notClickable(final TextView tv_wordTR,  final TextView tv_word){
         tv_word.setClickable(true);
         tv_wordTR.setClickable(true);
+    }
+
+    public static void tranlateML(final Context context,String tv_copy,TextView tv_wordTr){
+        TranslatorOptions options =
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(Languages1())
+                        .build();
+        final Translator englishTurkishTranslator =
+                Translation.getClient(options);
+        DownloadConditions conditions = new DownloadConditions.Builder()
+                .build();
+
+        englishTurkishTranslator.downloadModelIfNeeded(conditions)
+                .addOnSuccessListener(
+                        (OnSuccessListener) v -> {
+                            englishTurkishTranslator.translate(tv_copy)
+                                    .addOnSuccessListener(
+                                            (OnSuccessListener) translatedText -> {
+                                               tv_wordTr.setText(translatedText.toString());
+                                            })
+                                    .addOnFailureListener(
+                                            new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Error.
+                                                    Log.e("Error", "Translation faliled " + e);
+                                                }
+                                            });
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Model couldn’t be downloaded or other internal error.
+                                Log.e("Error", "Model could n’t be downloaded " + e);
+
+                            }
+                        });
+
+    }
+    public static String Languages1() {
+        String[] targetLanguages = {"af", "ar", "be", "bg", "bn", "ca", "cs", "cy", "da", "de", "el",
+                "en", "eo", "es", "et", "fa", "fi", "fr", "ga", "gl", "gu", "he", "hi", "hr", "ht", "hu",
+                "id", "is", "it", "ja", "ka", "kn", "ko", "lt", "lv", "mk", "mr", "ms", "mt", "nl", "no",
+                "pl", "pt", "ro", "ru", "sk", "sl", "sq", "sv", "sw", "ta", "te", "th", "tl", "tr", "uk",
+                "ur", "vi", "zh"};
+
+        String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
+        targetlanguage = targetlanguage.replace(" ", "");
+        int dilIndex = targetlanguage.length() + 1;
+        for (int i = 0; i < targetLanguages.length; i++) {
+            if (targetlanguage.contains(targetLanguages[i])) {
+                targetlanguage = targetLanguages[i];
+                dilIndex = i;
+            }
+        }
+        if (dilIndex == targetlanguage.length() + 1) {
+            targetlanguage = "en";
+        } else if (targetlanguage.contains(targetLanguages[dilIndex])) {
+            targetlanguage = targetLanguages[dilIndex];
+        } else {
+            targetlanguage = "en";
+        }
+        return targetlanguage;
     }
 
     public static String Languages() {
