@@ -995,29 +995,33 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             val type = data.getStringExtra(TYPE)
 
             if (type == CHAPTER_SELECTED) {
-                goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION))
+                goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION)!!)
 
             } else if (type == HIGHLIGHT_SELECTED) {
                 val highlightImpl = data.getParcelableExtra<HighlightImpl>(HIGHLIGHT_ITEM)
-                currentChapterIndex = highlightImpl.pageNumber
+                if (highlightImpl != null) {
+                    currentChapterIndex = highlightImpl.pageNumber
+                }
                 mFolioPageViewPager!!.currentItem = currentChapterIndex
                 val folioPageFragment = currentFragment ?: return
-                folioPageFragment.scrollToHighlightId(highlightImpl.rangy)
+                if (highlightImpl != null) {
+                    folioPageFragment.scrollToHighlightId(highlightImpl.rangy)
+                }
             }
         }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        releasePlayer()
+    //    releasePlayer()
     }
-    private fun releasePlayer() {
-        if (exoplayer != null) {
+   /*private fun releasePlayer() {
+        if (media != null) {
             exoplayer?.stop()
             exoplayer?.release()
             exoplayer = null
         }
-    }
+    }*/
     
     override fun onDestroy() {
         super.onDestroy()
@@ -1037,7 +1041,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
-        releasePlayer()
+      //  releasePlayer()
     }
 
     override fun getCurrentChapterIndex(): Int {
