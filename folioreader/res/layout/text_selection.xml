@@ -28,20 +28,19 @@
 
                 <TextView
                     android:id="@+id/tv_word"
-                    style="@style/TextViewTextSelector"
+                    style="@style/TextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:letterSpacing="0.02"
-                    android:lineSpacingExtra="0.5dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/librebaskerville"
+                    android:letterSpacing="0.02"
+                    android:lineSpacingExtra="0.5dp"
                     android:maxLines="6"
                     android:padding="5dp"
                     android:text="Please Wait For Downloading...\nThe Phone Language will be Reference for translating feature. Please Set Phone Language To Native Language"
-                    android:textColor="@color/transparent_black"
                     android:textSize="12sp" />
 
                 <!--
