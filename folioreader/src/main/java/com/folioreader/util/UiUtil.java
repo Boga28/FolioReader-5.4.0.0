@@ -1,7 +1,6 @@
 package com.folioreader.util;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -18,24 +16,16 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.StateSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -44,7 +34,6 @@ import androidx.core.content.ContextCompat;
 
 import com.folioreader.AppContext;
 import com.folioreader.R;
-import com.folioreader.model.sqlite.DbWordLearn;
 import com.folioreader.ui.view.UnderlinedTextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,21 +43,12 @@ import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
-import java.util.Objects;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by mahavir on 3/30/16.
@@ -365,15 +345,15 @@ public class UiUtil {
         return null;
     }
 
-    public static void bol( String tv_copy, final TextView tv_word) {
+ /*   public static void bol( String tv_copy, final TextView tv_word) {
         String[] bol = tv_copy.split("\\.");
         if(bol.length==0){
             tv_word.setText(tv_copy);
         }else{
             tv_word.setText(bol[0]+".");
         }
-    }
-    public static void translate(final Context context, String tv_copy, final TextView tv_wordTR,  final TextView tv_word) {
+    }*/
+ /*   public static void translate(final Context context, String tv_copy, final TextView tv_wordTR,  final TextView tv_word) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
         String[] bol = tv_copy.split("\\.");
@@ -430,13 +410,13 @@ public class UiUtil {
         tv_word.setClickable(false);
         tv_wordTR.setClickable(false);
 
-    }
-    public static void notClickable(final TextView tv_wordTR,  final TextView tv_word){
+    }*/
+   /* public static void notClickable(final TextView tv_wordTR,  final TextView tv_word){
         tv_word.setClickable(true);
         tv_wordTR.setClickable(true);
-    }
+    }*/
 
-    public static void tranlateML(final Context context,String tv_copy,TextView tv_wordTr){
+    public static void tranlateML(final Context context, String tv_copy, TextView tv_wordTr) {
         TranslatorOptions options =
                 new TranslatorOptions.Builder()
                         .setSourceLanguage(TranslateLanguage.ENGLISH)
@@ -453,7 +433,7 @@ public class UiUtil {
                             englishTurkishTranslator.translate(tv_copy)
                                     .addOnSuccessListener(
                                             (OnSuccessListener) translatedText -> {
-                                               tv_wordTr.setText(translatedText.toString());
+                                                tv_wordTr.setText(translatedText.toString());
                                             })
                                     .addOnFailureListener(
                                             new OnFailureListener() {
@@ -475,6 +455,7 @@ public class UiUtil {
                         });
 
     }
+
     public static String Languages1() {
         String[] targetLanguages = {"af", "ar", "be", "bg", "bn", "ca", "cs", "cy", "da", "de", "el",
                 "en", "eo", "es", "et", "fa", "fi", "fr", "ga", "gl", "gu", "he", "hi", "hr", "ht", "hu",
@@ -529,56 +510,57 @@ public class UiUtil {
         }
         return targetlanguage;
     }
-    public static void translate1(final Context context, String tv_copy, final TextView tv_wordTR) {
-        // String tv_copy = "";
-        // tv_copy = tv_word.getText().toString();
 
-        String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
-                "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
-                "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
-                "lang=en-" + Languages() + "&[format=plain]&[options=1]&[callback=set]";//The API service URL
-        final String response1 = "";
-        OkHttpClient client = new OkHttpClient();
-        try {
-            Request request = new Request.Builder()
-                    .url(getURL)
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println(e.getMessage());
-                }
+    /* public static void translate1(final Context context, String tv_copy, final TextView tv_wordTR) {
+         // String tv_copy = "";
+         // tv_copy = tv_word.getText().toString();
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    final JSONObject jsonResult;
-                    final String result = response.body().string();
-                    try {
-                        jsonResult = new JSONObject(result);
-                        JSONArray convertedTextArray = jsonResult.getJSONArray("text");
-                        final String convertedText = convertedTextArray.get(0).toString();
-                        Log.d("okHttp", jsonResult.toString());
+         String getURL = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
+                 "key=trnsl.1.1.20200417T231214Z.2d6471c95618cafa." +
+                 "d45108b2e08ff6d744d891f82c5004cfcdbbdb22&text=" + tv_copy + "&" +
+                 "lang=en-" + Languages() + "&[format=plain]&[options=1]&[callback=set]";//The API service URL
+         final String response1 = "";
+         OkHttpClient client = new OkHttpClient();
+         try {
+             Request request = new Request.Builder()
+                     .url(getURL)
+                     .build();
+             client.newCall(request).enqueue(new Callback() {
+                 @Override
+                 public void onFailure(Call call, IOException e) {
+                     System.out.println(e.getMessage());
+                 }
 
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //Code for the UiThread
-                                tv_wordTR.setText(convertedText);
-                            }
-                        });
+                 @Override
+                 public void onResponse(Call call, Response response) throws IOException {
+                     final JSONObject jsonResult;
+                     final String result = response.body().string();
+                     try {
+                         jsonResult = new JSONObject(result);
+                         JSONArray convertedTextArray = jsonResult.getJSONArray("text");
+                         final String convertedText = convertedTextArray.get(0).toString();
+                         Log.d("okHttp", jsonResult.toString());
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (Exception ex) {
-            tv_wordTR.setText(ex.getMessage());
+                         ((Activity) context).runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                 //Code for the UiThread
+                                 tv_wordTR.setText(convertedText);
+                             }
+                         });
 
-        }
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             });
+         } catch (Exception ex) {
+             tv_wordTR.setText(ex.getMessage());
 
-    }
-    public static void dictionary1(final Context context, String words, final TextView tv_wordTR) {
+         }
+
+     }*/
+   /* public static void dictionary1(final Context context, String words, final TextView tv_wordTR) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
         String getURL = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?" +
@@ -631,11 +613,11 @@ public class UiUtil {
 
         }
 
-    }
+    }*/
     public static String dictionaryLanguage() {
 
-        String[] targetLanguages = {"cs","da","de","el","es","et","fi","fr","en","it","lt","lv"
-                                    ,"nl","no","pt","ru","sk","sv","tr","uk"};
+        String[] targetLanguages = {"cs", "da", "de", "el", "es", "et", "fi", "fr", "en", "it", "lt", "lv"
+                , "nl", "no", "pt", "ru", "sk", "sv", "tr", "uk"};
 
         String targetlanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
         targetlanguage = targetlanguage.replace(" ", "");

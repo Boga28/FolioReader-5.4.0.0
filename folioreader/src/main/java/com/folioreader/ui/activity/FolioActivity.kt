@@ -84,7 +84,10 @@ import android.content.*
 import android.os.Message
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.core.os.postDelayed
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -94,20 +97,26 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import java.util.concurrent.TimeUnit
 
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener
     //Odullu Reklam için
     /* ,RewardedVideoAdListener */       {
-    /*
-    private lateinit var mp: MediaPlayer
-    private var totalTime: Int = 0
-     */
+  /*
     private var exoplayerView : SimpleExoPlayerView? = null
     private var exoplayer : SimpleExoPlayer? = null
     private var playbackStateBuilder : PlaybackStateCompat.Builder? = null
-    private var mediaSession: MediaSessionCompat? = null
+    private var mediaSession: MediaSessionCompat? = null */
+
+    private var seekbar:SeekBar?=null
+    private var rewind_btn:ImageView?=null
+    private var play_btn:ImageView?=null
+    private var pause_btn:ImageView?=null
+    private var fforward_btn:ImageView?=null
+    private var currentTime_tw:TextView?=null
+    private var totalTime_tw:TextView?=null
 
 
 
@@ -354,60 +363,91 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         //Audio Player
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
-        var maudio: String = ""
-        maudio = mAudioLink.toString()
-        val uri = maudio.toUri()
+        val uri = mAudioLink?.toUri()
 
-        exoplayerView = findViewById(R.id.simpleExoPlayerView)
-
-            initializePlayer(uri)
-
-
-        /*
-        try {
-            mp = MediaPlayer.create(this, uri)
-            totalTime = mp.duration
-            // Position Bar
-            positionBar.max = totalTime
-        }catch (e : Exception){
-            e.printStackTrace()
+      //  exoplayerView = findViewById(R.id.simpleExoPlayerView)
+        seekbar = findViewById(R.id.seekbar1)
+        rewind_btn = findViewById(R.id.rewind_btn1)
+        play_btn = findViewById(R.id.play_btn1)
+        pause_btn = findViewById(R.id.pause_btn1)
+        fforward_btn = findViewById(R.id.fforward_btn1)
+        totalTime_tw = findViewById(R.id.totalTime_tw1)
+        currentTime_tw = findViewById(R.id.currentTime_tw1)
+        if (uri != null) {
+            initializeMediaPlayer(uri,this)
         }
-
-        positionBar.setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        try {
-                            mp.seekTo(progress)
-                        }catch (e:Exception){
-                            e.printStackTrace()
-                        }
-
-                    }
-                }
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                }
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                }
-            }
-        )   // Thread
-        Thread(Runnable {
-            while (mp != null) {
-                try {
-                    var msg = Message()
-                    msg.what = mp.currentPosition
-                    handler1.sendMessage(msg)
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException) {
-                }
-            }
-        }).start()
-         */
-
-
+        // initializePlayer(uri)
     }
 
-    private fun initializePlayer( mAudiodur:Uri) {
+    private fun initializeMediaPlayer(uri: Uri,context: Context) {
+
+        val mediaPlayer=MediaPlayer.create(context,uri)
+        totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
+        seekbar?.progress=0
+        seekbar?.max=mediaPlayer.duration
+        play_btn?.setOnClickListener{
+            if (!mediaPlayer.isPlaying){
+                mediaPlayer.start()
+                play_btn!!.visibility=View.GONE
+                pause_btn!!.visibility=View.VISIBLE
+            }
+        }
+        pause_btn?.setOnClickListener {
+            if (mediaPlayer.isPlaying){
+                mediaPlayer.pause()
+                play_btn!!.visibility=View.VISIBLE
+                pause_btn!!.visibility=View.GONE
+            }
+        }
+        fforward_btn?.setOnClickListener {
+            mediaPlayer.seekTo(mediaPlayer.currentPosition+10000)
+            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+        }
+        rewind_btn?.setOnClickListener {
+            mediaPlayer.seekTo(mediaPlayer.currentPosition-10000)
+            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+        }
+        seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
+                if (changed){
+                    mediaPlayer.seekTo(pos)
+                }
+                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+            }
+
+        })
+        val handler1:Handler=Handler()
+        val runnable: Runnable = object : Runnable{
+            override fun run() {
+            seekbar?.progress= mediaPlayer.currentPosition
+            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+            handler1.postDelayed(this,900)
+            }
+        }
+        handler1.postDelayed(runnable,900)
+
+        mediaPlayer.setOnCompletionListener {
+            play_btn!!.visibility=View.VISIBLE
+            pause_btn!!.visibility=View.GONE
+            seekbar?.progress=0
+            mediaPlayer.seekTo(0)
+        }
+
+    }
+    fun createTimeLabel(time:Int): String{
+        return String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(time.toLong()),
+            (TimeUnit.MILLISECONDS.toSeconds(time.toLong()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(
+                time.toLong()
+            ))))
+    }
+
+  /*  private fun initializePlayer( mAudiodur:Uri) {
         val trackSelector = DefaultTrackSelector()
         exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
 
@@ -430,15 +470,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mediaSession?.setPlaybackState(playbackStateBuilder?.build())
         mediaSession?.isActive = true
 
-    }
+    }*/
 
 
-    // Ödüllü Reklam
-   /* private fun loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd("ca-app-pub-3405044999727097/9904285650",
-            AdRequest.Builder().build())
-    }
-    */
     fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(context, message , duration).show()
     }
