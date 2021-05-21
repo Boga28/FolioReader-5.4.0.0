@@ -43,12 +43,20 @@ import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by mahavir on 3/30/16.
@@ -560,7 +568,7 @@ public class UiUtil {
          }
 
      }*/
-   /* public static void dictionary1(final Context context, String words, final TextView tv_wordTR) {
+    public static void dictionary1(final Context context, String words, final TextView tv_wordTR) {
         // String tv_copy = "";
         // tv_copy = tv_word.getText().toString();
         String getURL = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?" +
@@ -613,7 +621,7 @@ public class UiUtil {
 
         }
 
-    }*/
+    }
     public static String dictionaryLanguage() {
 
         String[] targetLanguages = {"cs", "da", "de", "el", "es", "et", "fi", "fr", "en", "it", "lt", "lv"
