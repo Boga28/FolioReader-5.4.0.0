@@ -32,7 +32,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -76,7 +75,6 @@ import com.google.android.gms.ads.reward.RewardItem
 //import com.google.android.gms.ads.reward.RewardedVideoAd
 //import com.google.android.gms.ads.reward.RewardedVideoAdListener
 
-import android.widget.SeekBar
 import kotlinx.android.synthetic.main.folio_activity.*
 import android.media.MediaPlayer
 import android.annotation.SuppressLint
@@ -84,8 +82,7 @@ import android.content.*
 import android.os.Message
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.net.toUri
 import androidx.core.os.postDelayed
 import java.util.concurrent.TimeUnit
@@ -104,6 +101,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var fforward_btn:ImageView?=null
     private var currentTime_tw:TextView?=null
     private var totalTime_tw:TextView?=null
+    private lateinit var mediaPlayerLayout1: LinearLayout
 
 
 
@@ -305,6 +303,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         initDistractionFreeMode(savedInstanceState)
 
         setContentView(R.layout.folio_activity)
+        mediaPlayerLayout1=findViewById(R.id.mediaPlayerLayout)
         this.savedInstanceState = savedInstanceState
 
         if (savedInstanceState != null) {
@@ -864,7 +863,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-            mediaPlayerLayout.visibility=View.VISIBLE
+            mediaPlayerLayout1.visibility=View.VISIBLE
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             if (appBarLayout != null)
@@ -887,7 +886,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     // Hide the nav bar and status bar
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
-            mediaPlayerLayout.visibility=View.GONE
+            mediaPlayerLayout1.visibility=View.GONE
 
         } else {
             window.setFlags(
