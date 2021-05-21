@@ -48,7 +48,9 @@
         android:orientation="vertical"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        ads:layout_constraintBottom_toTopOf="@id/adviewLayout">
+        ads:layout_constraintBottom_toTopOf="@id/adviewLayout"
+        ads:layout_constraintLeft_toLeftOf="parent"
+        ads:layout_constraintRight_toRightOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -61,16 +63,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:text="00:00" />
+                android:layout_marginStart="10dp" />
 
             <SeekBar
                 android:id="@+id/seekbar1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginStart="50dp"
-                android:layout_marginEnd="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/totalTime_tw1"
+                android:layout_toEndOf="@id/currentTime_tw1"
                 android:progress="0" />
 
             <TextView
@@ -80,8 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:text="01:19" />
+                android:layout_marginEnd="10dp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -95,15 +97,17 @@
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:layout_toLeftOf="@id/play_btn1"
-                android:src="@drawable/ic_fast_rewind" />
+                android:layout_toStartOf="@id/play_btn1"
+                android:src="@drawable/ic_fast_rewind"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/play_btn1"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_play" />
+                android:src="@drawable/ic_play"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/pause_btn1"
@@ -111,7 +115,8 @@
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_pause"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/fforward_btn1"
@@ -119,8 +124,9 @@
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                android:layout_toRightOf="@id/play_btn1"
-                android:src="@drawable/ic_fast_forward" />
+                android:layout_toEndOf="@id/play_btn1"
+                android:src="@drawable/ic_fast_forward"
+                android:contentDescription="TODO" />
 
         </RelativeLayout>
 
