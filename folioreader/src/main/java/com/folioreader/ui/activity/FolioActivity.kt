@@ -304,6 +304,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         initDistractionFreeMode(savedInstanceState)
 
         setContentView(R.layout.folio_activity)
+        mediaPlayerLayout1=findViewById(R.id.mediaPlayerLayout)
         this.savedInstanceState = savedInstanceState
 
         if (savedInstanceState != null) {
@@ -863,7 +864,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-            mediaPlayerLayout.visibility=View.VISIBLE
+            mediaPlayerLayout1?.visibility=View.VISIBLE
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             if (appBarLayout != null)
@@ -886,7 +887,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     // Hide the nav bar and status bar
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
-            mediaPlayerLayout.visibility=View.GONE
+            mediaPlayerLayout1?.visibility=View.GONE
 
         } else {
             window.setFlags(
