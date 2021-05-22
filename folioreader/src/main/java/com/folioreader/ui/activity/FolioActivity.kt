@@ -105,6 +105,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var currentTime_tw: TextView? = null
     private var totalTime_tw: TextView? = null
 
+    private var initilazedCheckMediaPlayerr: Boolean = false
+    private var handler1: Handler? = null
+    private var mediaPlayerLayout1: LinearLayout? = null
+    private lateinit var mediaPlayer: MediaPlayer
 
     lateinit var mAdView: AdView
 
@@ -115,14 +119,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var actionBar: ActionBar? = null
     private var appBarLayout: FolioAppBarLayout? = null
     private var toolbar: Toolbar? = null
-    private var initilazedCheckMediaPlayerr: Boolean = false
     private var handler: Handler? = null
-    private var handler1: Handler? = null
+
 
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
-    private var mediaPlayerLayout1: LinearLayout? = null
-    private lateinit var mediaPlayer: MediaPlayer
     private var distractionFreeMode: Boolean = false
 
     private var entryReadLocator: ReadLocator? = null
@@ -371,16 +372,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             initializeMediaPlayer(uri, this)
         }
         play_btn?.setOnClickListener {
-            if (mediaPlayer!=null){
-                 if (!mediaPlayer.isPlaying) {
-                mediaPlayer.start()
-                play_btn!!.visibility = View.GONE
-                pause_btn!!.visibility = View.VISIBLE
-                 }
-            }else if (mediaPlayer==null){
-                if (uri != null) {
-                initializeMediaPlayer(uri,this)}
-            }
+            try {
+                if (initilazedCheckMediaPlayerr){
+                    if (!mediaPlayer.isPlaying) {
+                        mediaPlayer.start()
+                        play_btn!!.visibility = View.GONE
+                        pause_btn!!.visibility = View.VISIBLE
+                    }
+                }else if (!initilazedCheckMediaPlayerr){
+                    if (uri != null) {
+                        initializeMediaPlayer(uri,this)}
+                }
+            }catch (e:Exception){}
 
         }
 
