@@ -117,7 +117,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var toolbar: Toolbar? = null
     private var distractionFreeMode: Boolean = false
     private var handler: Handler? = null
-    private var handler1: Handler? = null
 
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
@@ -274,9 +273,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onStop() {
         super.onStop()
-        if(mediaPlayer.isPlaying){
-            mediaPlayer.pause()
-        }
         Log.v(LOG_TAG, "-> onStop")
         topActivity = false
     }
@@ -418,11 +414,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 }
 
             })
-
+            val handler1: Handler = Handler()
             val runnable: Runnable = object : Runnable {
                 override fun run() {
                     val seekbar1 = seekbar
-                    if (mediaPlayer != null){
+              if (mediaPlayer != null){
                         if(mediaPlayer.isPlaying){
                         if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
                     currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))}
