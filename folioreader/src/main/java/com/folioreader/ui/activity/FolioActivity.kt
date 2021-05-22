@@ -121,6 +121,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
     private var mediaPlayerLayout1: LinearLayout?=null
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
 
     private var entryReadLocator: ReadLocator? = null
     private var lastReadLocator: ReadLocator? = null
@@ -370,7 +371,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private fun initializeMediaPlayer(uri: Uri,mcontext: Context) {
     if(isInternetAvailable(mcontext)) {
-        val mediaPlayer = MediaPlayer.create(mcontext, uri)
+         mediaPlayer.setDataSource(mcontext,uri)
         totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
         seekbar?.progress = 0
         seekbar?.max = mediaPlayer.duration
@@ -1029,6 +1030,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             localBroadcastManager.sendBroadcast(Intent(FolioReader.ACTION_FOLIOREADER_CLOSED))
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
+        }
+        if(mediaPlayer!=null){
+            if (mediaPlayer.isPlaying){
+                mediaPlayer.stop()
+                mediaPlayer.release()
+            }
         }
 
     }
