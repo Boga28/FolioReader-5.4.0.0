@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="10dp"
-        android:paddingBottom="2dp"
+        android:paddingBottom="25dp"
         ads:layout_constraintBottom_toTopOf="@id/adviewLayout"
         ads:layout_constraintLeft_toLeftOf="parent"
         ads:layout_constraintRight_toRightOf="parent">

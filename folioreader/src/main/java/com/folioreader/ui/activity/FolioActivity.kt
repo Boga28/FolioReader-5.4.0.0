@@ -79,6 +79,9 @@ import kotlinx.android.synthetic.main.folio_activity.*
 import android.media.MediaPlayer
 import android.annotation.SuppressLint
 import android.content.*
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.Message
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -365,37 +368,37 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         // initializePlayer(uri)
     }
 
-    private fun initializeMediaPlayer(uri: Uri,context: Context) {
-
-        val mediaPlayer=MediaPlayer.create(context,uri)
+    private fun initializeMediaPlayer(uri: Uri,mcontext: Context) {
+    if(isInternetAvailable(mcontext)) {
+        val mediaPlayer = MediaPlayer.create(context, uri)
         totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
-        seekbar?.progress=0
-        seekbar?.max=mediaPlayer.duration
-        play_btn?.setOnClickListener{
-            if (!mediaPlayer.isPlaying){
+        seekbar?.progress = 0
+        seekbar?.max = mediaPlayer.duration
+        play_btn?.setOnClickListener {
+            if (!mediaPlayer.isPlaying) {
                 mediaPlayer.start()
-                play_btn!!.visibility=View.GONE
-                pause_btn!!.visibility=View.VISIBLE
+                play_btn!!.visibility = View.GONE
+                pause_btn!!.visibility = View.VISIBLE
             }
         }
         pause_btn?.setOnClickListener {
-            if (mediaPlayer.isPlaying){
+            if (mediaPlayer.isPlaying) {
                 mediaPlayer.pause()
-                play_btn!!.visibility=View.VISIBLE
-                pause_btn!!.visibility=View.GONE
+                play_btn!!.visibility = View.VISIBLE
+                pause_btn!!.visibility = View.GONE
             }
         }
         fforward_btn?.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition+10000)
+            mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
             currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
         }
         rewind_btn?.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition-10000)
+            mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
             currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
         }
-        seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
-                if (changed){
+                if (changed) {
                     mediaPlayer.seekTo(pos)
                 }
                 currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
@@ -408,23 +411,23 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
 
         })
-        val handler1:Handler=Handler()
-        val runnable: Runnable = object : Runnable{
+        val handler1: Handler = Handler()
+        val runnable: Runnable = object : Runnable {
             override fun run() {
-            seekbar?.progress= mediaPlayer.currentPosition
-            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-            handler1.postDelayed(this,900)
+                seekbar?.progress = mediaPlayer.currentPosition
+                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                handler1.postDelayed(this, 900)
             }
         }
-        handler1.postDelayed(runnable,900)
+        handler1.postDelayed(runnable, 900)
 
         mediaPlayer.setOnCompletionListener {
-            play_btn!!.visibility=View.VISIBLE
-            pause_btn!!.visibility=View.GONE
-            seekbar?.progress=0
+            play_btn!!.visibility = View.VISIBLE
+            pause_btn!!.visibility = View.GONE
+            seekbar?.progress = 0
             mediaPlayer.seekTo(0)
         }
-
+    }
     }
     fun createTimeLabel(time:Int): String{
         return String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(time.toLong()),
@@ -432,8 +435,33 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 time.toLong()
             ))))
     }
+    fun isInternetAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                result = when (type) {
+                    ConnectivityManager.TYPE_WIFI -> true
+                    ConnectivityManager.TYPE_MOBILE -> true
+                    ConnectivityManager.TYPE_ETHERNET -> true
+                    else -> false
+                }
 
-
+            }
+        }
+        return result
+    }
 
     fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(context, message , duration).show()
