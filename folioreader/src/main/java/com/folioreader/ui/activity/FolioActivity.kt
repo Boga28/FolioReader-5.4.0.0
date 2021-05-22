@@ -369,7 +369,20 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (uri != null) {
             initializeMediaPlayer(uri, this)
         }
-        // initializePlayer(uri)
+        play_btn?.setOnClickListener {
+            if (mediaPlayer!=null){
+                 if (!mediaPlayer.isPlaying) {
+                mediaPlayer.start()
+                play_btn!!.visibility = View.GONE
+                pause_btn!!.visibility = View.VISIBLE
+                 }
+            }else if (mediaPlayer==null){
+                if (uri != null) {
+                initializeMediaPlayer(uri,this)}
+            }
+
+        }
+
     }
 
     private fun initializeMediaPlayer(uri: Uri, mcontext: Context) {
@@ -378,13 +391,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
             seekbar?.progress = 0
             seekbar?.max = mediaPlayer.duration
-            play_btn?.setOnClickListener {
-                if (!mediaPlayer.isPlaying) {
-                    mediaPlayer.start()
-                    play_btn!!.visibility = View.GONE
-                    pause_btn!!.visibility = View.VISIBLE
-                }
-            }
+
             pause_btn?.setOnClickListener {
                 if (mediaPlayer.isPlaying) {
                     mediaPlayer.pause()
@@ -435,6 +442,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 seekbar?.progress = 0
                 mediaPlayer.seekTo(0)
             }
+            if (mediaPlayer!=null){
+                if (!mediaPlayer.isPlaying){
+            mediaPlayer.start()
+            play_btn!!.visibility = View.GONE
+            pause_btn!!.visibility = View.VISIBLE}}
+        }else{
+            Toast.makeText(mcontext,"Please Check Internet Conectivity!",Toast.LENGTH_LONG).show()
         }
     }
 
@@ -1032,9 +1046,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onBackPressed() {
         super.onBackPressed()
         handler1?.removeCallbacksAndMessages(null)
-          if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-            mediaPlayer.release()
+        if(mediaPlayer!=null) {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+                mediaPlayer.release()
+            }
         }
     }
 
