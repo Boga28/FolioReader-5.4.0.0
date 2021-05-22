@@ -121,7 +121,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
     private var mediaPlayerLayout1: LinearLayout?=null
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private var mediaPlayer: MediaPlayer? = null
 
     private var entryReadLocator: ReadLocator? = null
     private var lastReadLocator: ReadLocator? = null
@@ -371,38 +371,39 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private fun initializeMediaPlayer(uri: Uri,mcontext: Context) {
     if(isInternetAvailable(mcontext)) {
-         mediaPlayer.setDataSource(mcontext,uri)
-        totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
+        mediaPlayer = MediaPlayer()
+         mediaPlayer?.setDataSource(mcontext,uri)
+        totalTime_tw?.setText(createTimeLabel(mediaPlayer!!.duration))
         seekbar?.progress = 0
-        seekbar?.max = mediaPlayer.duration
+        seekbar?.max = mediaPlayer?.duration!!
         play_btn?.setOnClickListener {
-            if (!mediaPlayer.isPlaying) {
-                mediaPlayer.start()
+            if (!mediaPlayer!!.isPlaying) {
+                mediaPlayer!!.start()
                 play_btn!!.visibility = View.GONE
                 pause_btn!!.visibility = View.VISIBLE
             }
         }
         pause_btn?.setOnClickListener {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.pause()
+            if (mediaPlayer!!.isPlaying) {
+                mediaPlayer!!.pause()
                 play_btn!!.visibility = View.VISIBLE
                 pause_btn!!.visibility = View.GONE
             }
         }
         fforward_btn?.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
-            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+            mediaPlayer!!.seekTo(mediaPlayer!!.currentPosition + 10000)
+            currentTime_tw?.setText(createTimeLabel(mediaPlayer!!.currentPosition))
         }
         rewind_btn?.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
-            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+            mediaPlayer!!.seekTo(mediaPlayer!!.currentPosition - 10000)
+            currentTime_tw?.setText(createTimeLabel(mediaPlayer!!.currentPosition))
         }
         seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
                 if (changed) {
-                    mediaPlayer.seekTo(pos)
+                    mediaPlayer!!.seekTo(pos)
                 }
-                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                currentTime_tw?.setText(createTimeLabel(mediaPlayer!!.currentPosition))
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -416,18 +417,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val runnable: Runnable = object : Runnable {
             override fun run() {
                 val seekbar1 = seekbar
-                if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
-                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                if (seekbar1 != null) seekbar1.progress = mediaPlayer!!.currentPosition
+                currentTime_tw?.setText(createTimeLabel(mediaPlayer!!.currentPosition))
                 handler1.postDelayed(this, 900)
             }
         }
         handler1.postDelayed(runnable, 900)
 
-        mediaPlayer.setOnCompletionListener {
+        mediaPlayer!!.setOnCompletionListener {
             play_btn!!.visibility = View.VISIBLE
             pause_btn!!.visibility = View.GONE
             seekbar?.progress = 0
-            mediaPlayer.seekTo(0)
+            mediaPlayer!!.seekTo(0)
         }
     }
     }
@@ -1032,9 +1033,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().r2StreamerApi = null
         }
         if(mediaPlayer!=null){
-            if (mediaPlayer.isPlaying){
-                mediaPlayer.stop()
-                mediaPlayer.release()
+            if (mediaPlayer!!.isPlaying){
+                mediaPlayer!!.stop()
+                mediaPlayer!!.release()
             }
         }
 
