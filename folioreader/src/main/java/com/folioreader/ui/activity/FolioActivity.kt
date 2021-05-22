@@ -1031,12 +1031,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
-        if(mediaPlayer!=null){
             if(mediaPlayer.isPlaying){
                 mediaPlayer.stop()
                 mediaPlayer.release()
-            }
-        }
+                    }
 
     }
 
