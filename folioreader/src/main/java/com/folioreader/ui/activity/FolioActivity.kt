@@ -117,6 +117,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var toolbar: Toolbar? = null
     private var distractionFreeMode: Boolean = false
     private var handler: Handler? = null
+    private var handler1: Handler? = null
 
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
@@ -414,7 +415,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 }
 
             })
-            val handler1: Handler = Handler()
+             handler1 = Handler()
             val runnable: Runnable = object : Runnable {
                 override fun run() {
                     val seekbar1 = seekbar
@@ -423,10 +424,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                         if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
                     currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))}
                 }
-                    handler1.postDelayed(this, 900)
+                    handler1!!.postDelayed(this, 900)
                 }
             }
-            handler1.postDelayed(runnable, 900)
+            handler1!!.postDelayed(runnable, 900)
 
             mediaPlayer.setOnCompletionListener {
                 play_btn!!.visibility = View.VISIBLE
@@ -1030,6 +1031,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onBackPressed() {
         super.onBackPressed()
+        handler1?.removeCallbacksAndMessages(null)
           if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
             mediaPlayer.release()
