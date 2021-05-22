@@ -273,6 +273,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onStop() {
         super.onStop()
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.pause()
+        }
         Log.v(LOG_TAG, "-> onStop")
         topActivity = false
     }
@@ -1027,13 +1030,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onBackPressed() {
         super.onBackPressed()
-    }
-
-    override fun onDestroy() {
-        if (mediaPlayer.isPlaying) {
+          if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
             mediaPlayer.release()
         }
+    }
+
+
+    override fun onDestroy() {
+
         super.onDestroy()
         if (outState != null) {
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
