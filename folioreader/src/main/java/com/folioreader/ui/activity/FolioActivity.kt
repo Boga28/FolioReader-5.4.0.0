@@ -115,7 +115,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var actionBar: ActionBar? = null
     private var appBarLayout: FolioAppBarLayout? = null
     private var toolbar: Toolbar? = null
-    private var distractionFreeMode: Boolean = false
+    private var initilazedCheckMediaPlayerr: Boolean = false
     private var handler: Handler? = null
     private var handler1: Handler? = null
 
@@ -123,6 +123,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
     private var mediaPlayerLayout1: LinearLayout? = null
     private lateinit var mediaPlayer: MediaPlayer
+    private var distractionFreeMode: Boolean = false
 
     private var entryReadLocator: ReadLocator? = null
     private var lastReadLocator: ReadLocator? = null
@@ -443,13 +444,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 mediaPlayer.seekTo(0)
             }
             if (mediaPlayer!=null){
+                initilazedCheckMediaPlayerr=true
                 if (!mediaPlayer.isPlaying){
-            mediaPlayer.start()
-            play_btn!!.visibility = View.GONE
-            pause_btn!!.visibility = View.VISIBLE}}
+                    Log.d("mediaPlayer","It is working")
+                }
         }else{
             Toast.makeText(mcontext,"Please Check Internet Conectivity!",Toast.LENGTH_LONG).show()
-        }
+        }}
     }
 
     fun createTimeLabel(time: Int): String {
@@ -1046,7 +1047,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun onBackPressed() {
         super.onBackPressed()
         handler1?.removeCallbacksAndMessages(null)
-        if(mediaPlayer!=null) {
+        if(initilazedCheckMediaPlayerr) {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.stop()
                 mediaPlayer.release()
