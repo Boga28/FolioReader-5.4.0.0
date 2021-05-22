@@ -93,21 +93,21 @@ import java.util.concurrent.TimeUnit
 
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener
-    //Odullu Reklam için
-    /* ,RewardedVideoAdListener */       {
+//Odullu Reklam için
+/* ,RewardedVideoAdListener */ {
 
 
-    private var seekbar:SeekBar?=null
-    private var rewind_btn:ImageView?=null
-    private var play_btn:ImageView?=null
-    private var pause_btn:ImageView?=null
-    private var fforward_btn:ImageView?=null
-    private var currentTime_tw:TextView?=null
-    private var totalTime_tw:TextView?=null
+    private var seekbar: SeekBar? = null
+    private var rewind_btn: ImageView? = null
+    private var play_btn: ImageView? = null
+    private var pause_btn: ImageView? = null
+    private var fforward_btn: ImageView? = null
+    private var currentTime_tw: TextView? = null
+    private var totalTime_tw: TextView? = null
 
 
+    lateinit var mAdView: AdView
 
-    lateinit var mAdView : AdView
     //private lateinit var mRewardedVideoAd: RewardedVideoAd
     private var bookFileName: String? = null
 
@@ -120,7 +120,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private var currentChapterIndex: Int = 0
     private var mFolioPageFragmentAdapter: FolioPageFragmentAdapter? = null
-    private var mediaPlayerLayout1: LinearLayout?=null
+    private var mediaPlayerLayout1: LinearLayout? = null
     private lateinit var mediaPlayer: MediaPlayer
 
     private var entryReadLocator: ReadLocator? = null
@@ -133,7 +133,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var spine: List<Link>? = null
 
     private var mBookId: String? = null
-    private  var mAudioLink: String? = null
+    private var mAudioLink: String? = null
     private var mEpubFilePath: String? = null
     private var mEpubSourceType: EpubSourceType? = null
     private var mEpubRawId = 0
@@ -175,7 +175,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             if (action != null && action == FolioReader.ACTION_CLOSE_FOLIOREADER) {
 
                 try {
-                    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    val activityManager =
+                        context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                     val tasks = activityManager.runningAppProcesses
                     taskImportance = tasks[0].importance
                 } catch (e: Exception) {
@@ -183,7 +184,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 }
 
                 val closeIntent = Intent(applicationContext, FolioActivity::class.java)
-                closeIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                closeIntent.flags =
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 closeIntent.action = FolioReader.ACTION_CLOSE_FOLIOREADER
                 this@FolioActivity.startActivity(closeIntent)
             }
@@ -308,7 +310,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         initDistractionFreeMode(savedInstanceState)
 
         setContentView(R.layout.folio_activity)
-        mediaPlayerLayout1=findViewById(R.id.mediaPlayerLayout)
+        mediaPlayerLayout1 = findViewById(R.id.mediaPlayerLayout)
         this.savedInstanceState = savedInstanceState
 
         if (savedInstanceState != null) {
@@ -364,79 +366,85 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         totalTime_tw = findViewById(R.id.totalTime_tw1)
         currentTime_tw = findViewById(R.id.currentTime_tw1)
         if (uri != null) {
-            initializeMediaPlayer(uri,this)
+            initializeMediaPlayer(uri, this)
         }
         // initializePlayer(uri)
     }
 
-    private fun initializeMediaPlayer(uri: Uri,mcontext: Context) {
-    if(isInternetAvailable(mcontext)) {
-     mediaPlayer = MediaPlayer.create(mcontext, uri)
-        totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
-        seekbar?.progress = 0
-        seekbar?.max = mediaPlayer.duration
-        play_btn?.setOnClickListener {
-            if (!mediaPlayer.isPlaying) {
-                mediaPlayer.start()
-                play_btn!!.visibility = View.GONE
-                pause_btn!!.visibility = View.VISIBLE
+    private fun initializeMediaPlayer(uri: Uri, mcontext: Context) {
+        if (isInternetAvailable(mcontext)) {
+            mediaPlayer = MediaPlayer.create(mcontext, uri)
+            totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
+            seekbar?.progress = 0
+            seekbar?.max = mediaPlayer.duration
+            play_btn?.setOnClickListener {
+                if (!mediaPlayer.isPlaying) {
+                    mediaPlayer.start()
+                    play_btn!!.visibility = View.GONE
+                    pause_btn!!.visibility = View.VISIBLE
+                }
             }
-        }
-        pause_btn?.setOnClickListener {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.pause()
+            pause_btn?.setOnClickListener {
+                if (mediaPlayer.isPlaying) {
+                    mediaPlayer.pause()
+                    play_btn!!.visibility = View.VISIBLE
+                    pause_btn!!.visibility = View.GONE
+                }
+            }
+            fforward_btn?.setOnClickListener {
+                mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
+                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+            }
+            rewind_btn?.setOnClickListener {
+                mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
+                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+            }
+            seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
+                    if (changed) {
+                        mediaPlayer.seekTo(pos)
+                    }
+                    currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                }
+
+            })
+            val handler1: Handler = Handler()
+            val runnable: Runnable = object : Runnable {
+                override fun run() {
+                    val seekbar1 = seekbar
+                    if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
+                    currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                    handler1.postDelayed(this, 900)
+                }
+            }
+            handler1.postDelayed(runnable, 900)
+
+            mediaPlayer.setOnCompletionListener {
                 play_btn!!.visibility = View.VISIBLE
                 pause_btn!!.visibility = View.GONE
+                seekbar?.progress = 0
+                mediaPlayer.seekTo(0)
             }
-        }
-        fforward_btn?.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
-            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-        }
-        rewind_btn?.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
-            currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-        }
-        seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
-                if (changed) {
-                    mediaPlayer.seekTo(pos)
-                }
-                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-            }
-
-        })
-        val handler1: Handler = Handler()
-        val runnable: Runnable = object : Runnable {
-            override fun run() {
-                val seekbar1 = seekbar
-                if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
-                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-                handler1.postDelayed(this, 900)
-            }
-        }
-        handler1.postDelayed(runnable, 900)
-
-        mediaPlayer.setOnCompletionListener {
-            play_btn!!.visibility = View.VISIBLE
-            pause_btn!!.visibility = View.GONE
-            seekbar?.progress = 0
-            mediaPlayer.seekTo(0)
         }
     }
+
+    fun createTimeLabel(time: Int): String {
+        return String.format(
+            "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(time.toLong()),
+            (TimeUnit.MILLISECONDS.toSeconds(time.toLong()) - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.MILLISECONDS.toMinutes(
+                    time.toLong()
+                )
+            ))
+        )
     }
-    fun createTimeLabel(time:Int): String{
-        return String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(time.toLong()),
-            (TimeUnit.MILLISECONDS.toSeconds(time.toLong()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(
-                time.toLong()
-            ))))
-    }
+
     fun isInternetAvailable(context: Context): Boolean {
         var result = false
         val connectivityManager =
@@ -465,8 +473,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         return result
     }
 
-    fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
-        Toast.makeText(context, message , duration).show()
+    fun Context.toast(
+        context: Context = applicationContext,
+        message: String,
+        duration: Int = Toast.LENGTH_SHORT
+    ) {
+        Toast.makeText(context, message, duration).show()
     }
 
     private fun initActionBar() {
@@ -660,7 +672,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
 
-        portNumber = intent.getIntExtra(FolioReader.EXTRA_PORT_NUMBER, Constants.DEFAULT_PORT_NUMBER)
+        portNumber =
+            intent.getIntExtra(FolioReader.EXTRA_PORT_NUMBER, Constants.DEFAULT_PORT_NUMBER)
         portNumber = AppUtil.getAvailablePortNumber(portNumber)
 
         r2StreamerServer = Server(portNumber)
@@ -713,7 +726,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun getStreamerUrl(): String {
 
         if (streamerUri == null) {
-            streamerUri = Uri.parse(String.format(STREAMER_URL_TEMPLATE, LOCALHOST, portNumber, bookFileName))
+            streamerUri =
+                Uri.parse(String.format(STREAMER_URL_TEMPLATE, LOCALHOST, portNumber, bookFileName))
         }
         return streamerUri.toString()
     }
@@ -750,7 +764,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         hideSystemUI()
         showSystemUI()
 
-        distractionFreeMode = savedInstanceState != null && savedInstanceState.getBoolean(BUNDLE_DISTRACTION_FREE_MODE)
+        distractionFreeMode =
+            savedInstanceState != null && savedInstanceState.getBoolean(BUNDLE_DISTRACTION_FREE_MODE)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -897,7 +912,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-            mediaPlayerLayout1?.visibility=View.VISIBLE
+            mediaPlayerLayout1?.visibility = View.VISIBLE
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             if (appBarLayout != null)
@@ -920,7 +935,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     // Hide the nav bar and status bar
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
-            mediaPlayerLayout1?.visibility=View.GONE
+            mediaPlayerLayout1?.visibility = View.GONE
 
         } else {
             window.setFlags(
@@ -1011,11 +1026,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()    }
+        super.onBackPressed()
+    }
 
     override fun onDestroy() {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
         super.onDestroy()
-        if (outState != null){
+        if (outState != null) {
             outState!!.putSerializable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE, lastReadLocator)
         }
 
@@ -1031,10 +1051,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             FolioReader.get().retrofit = null
             FolioReader.get().r2StreamerApi = null
         }
-            if(mediaPlayer.isPlaying){
-                mediaPlayer.stop()
-                mediaPlayer.release()
-                    }
+
 
     }
 
@@ -1046,8 +1063,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         mFolioPageViewPager = findViewById(R.id.folioPageViewPager)
         // Replacing with addOnPageChangeListener(), onPageSelected() is not invoked
-        mFolioPageViewPager!!.setOnPageChangeListener(object : DirectionalViewpager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        mFolioPageViewPager!!.setOnPageChangeListener(object :
+            DirectionalViewpager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
 
             override fun onPageSelected(position: Int) {
                 Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
@@ -1070,14 +1093,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                                 "position = " + position
                     )
 
-                    var folioPageFragment = mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
+                    var folioPageFragment =
+                        mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
                     if (folioPageFragment != null) {
                         folioPageFragment.scrollToLast()
                         if (folioPageFragment.mWebview != null)
                             folioPageFragment.mWebview!!.dismissPopupWindow()
                     }
 
-                    folioPageFragment = mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
+                    folioPageFragment =
+                        mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
                     if (folioPageFragment != null) {
                         folioPageFragment.scrollToFirst()
                         if (folioPageFragment.mWebview != null)
@@ -1219,12 +1244,20 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupBook()
             } else {
-                Toast.makeText(this, getString(R.string.cannot_access_epub_message), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.cannot_access_epub_message),
+                    Toast.LENGTH_LONG
+                ).show()
                 finish()
             }
         }
