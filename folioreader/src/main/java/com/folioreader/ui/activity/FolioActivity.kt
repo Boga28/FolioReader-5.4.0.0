@@ -482,6 +482,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         actionBar!!.setBackgroundDrawable(
             ColorDrawable(ContextCompat.getColor(this, R.color.white))
         )
+        mediaPlayerLayout1?.setBackgroundColor(resources.getColor(R.color.day_background_color))
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
     }
 
@@ -491,6 +492,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         actionBar!!.setBackgroundDrawable(
             ColorDrawable(ContextCompat.getColor(this, R.color.black))
         )
+        mediaPlayerLayout1?.setBackgroundColor(resources.getColor(R.color.night_background_color))
+
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.night_title_text_color))
     }
 
