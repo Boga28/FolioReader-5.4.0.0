@@ -369,7 +369,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     private fun initializeMediaPlayer(uri: Uri,mcontext: Context) {
-    if(isInternetAvailable(con)) {
+    if(isInternetAvailable(mcontext)) {
         val mediaPlayer = MediaPlayer.create(mcontext, uri)
         totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
         seekbar?.progress = 0
