@@ -369,8 +369,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     private fun initializeMediaPlayer(uri: Uri,mcontext: Context) {
-    if(isInternetAvailable(mcontext)) {
-        val mediaPlayer = MediaPlayer.create(context, uri)
+    if(isInternetAvailable(con)) {
+        val mediaPlayer = MediaPlayer.create(mcontext, uri)
         totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
         seekbar?.progress = 0
         seekbar?.max = mediaPlayer.duration
@@ -414,7 +414,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val handler1: Handler = Handler()
         val runnable: Runnable = object : Runnable {
             override fun run() {
-                seekbar?.progress = mediaPlayer.currentPosition
+                val seekbar1 = seekbar
+                if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
                 currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
                 handler1.postDelayed(this, 900)
             }
