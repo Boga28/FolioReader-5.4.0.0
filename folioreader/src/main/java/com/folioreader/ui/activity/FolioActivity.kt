@@ -391,69 +391,78 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private fun initializeMediaPlayer(uri: Uri, mcontext: Context) {
         if (isInternetAvailable(mcontext)) {
-            mediaPlayer = MediaPlayer.create(mcontext, uri)
-            totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
-            seekbar?.progress = 0
-            seekbar?.max = mediaPlayer.duration
+            try {
+                mediaPlayer = MediaPlayer.create(mcontext, uri)
+                totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
+                seekbar?.progress = 0
+                seekbar?.max = mediaPlayer.duration
 
-            pause_btn?.setOnClickListener {
-                if (mediaPlayer.isPlaying) {
-                    mediaPlayer.pause()
-                    play_btn!!.visibility = View.VISIBLE
-                    pause_btn!!.visibility = View.GONE
-                }
-            }
-            fforward_btn?.setOnClickListener {
-                mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
-                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-            }
-            rewind_btn?.setOnClickListener {
-                mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
-                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-            }
-            seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
-                    if (changed) {
-                        mediaPlayer.seekTo(pos)
+                pause_btn?.setOnClickListener {
+                    if (mediaPlayer.isPlaying) {
+                        mediaPlayer.pause()
+                        play_btn!!.visibility = View.VISIBLE
+                        pause_btn!!.visibility = View.GONE
                     }
+                }
+                fforward_btn?.setOnClickListener {
+                    mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
                     currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
                 }
+                rewind_btn?.setOnClickListener {
+                    mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
+                    currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                }
+                seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
+                        if (changed) {
+                            mediaPlayer.seekTo(pos)
+                        }
+                        currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                    }
 
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                }
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                    }
 
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                }
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                    }
 
-            })
-             handler1 = Handler()
-            val runnable: Runnable = object : Runnable {
-                override fun run() {
-                    val seekbar1 = seekbar
-              if (mediaPlayer != null){
-                        if(mediaPlayer.isPlaying){
-                        if (seekbar1 != null) seekbar1.progress = mediaPlayer.currentPosition
-                    currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))}
+                })
+                handler1 = Handler()
+                val runnable: Runnable = object : Runnable {
+                    override fun run() {
+                        val seekbar1 = seekbar
+                        if (mediaPlayer != null) {
+                            if (mediaPlayer.isPlaying) {
+                                if (seekbar1 != null) seekbar1.progress =
+                                    mediaPlayer.currentPosition
+                                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
+                            }
+                        }
+                        handler1!!.postDelayed(this, 900)
+                    }
                 }
-                    handler1!!.postDelayed(this, 900)
-                }
-            }
-            handler1!!.postDelayed(runnable, 900)
+                handler1!!.postDelayed(runnable, 900)
 
-            mediaPlayer.setOnCompletionListener {
-                play_btn!!.visibility = View.VISIBLE
-                pause_btn!!.visibility = View.GONE
-                seekbar?.progress = 0
-                mediaPlayer.seekTo(0)
-            }
-            if (mediaPlayer!=null){
-                initilazedCheckMediaPlayerr=true
-                if (!mediaPlayer.isPlaying){
-                    Log.d("mediaPlayer","It is working")
+                mediaPlayer.setOnCompletionListener {
+                    play_btn!!.visibility = View.VISIBLE
+                    pause_btn!!.visibility = View.GONE
+                    seekbar?.progress = 0
+                    mediaPlayer.seekTo(0)
                 }
-        }else{
-            Toast.makeText(mcontext,"Please Check Internet Conectivity!",Toast.LENGTH_LONG).show()
-        }}
+                if (mediaPlayer != null) {
+                    initilazedCheckMediaPlayerr = true
+                    if (!mediaPlayer.isPlaying) {
+                        Log.d("mediaPlayer", "It is working")
+                    }
+                } else {
+                    Toast.makeText(
+                        mcontext,
+                        "Please Check Internet Conectivity!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }catch (e:Exception){}
+        }
     }
 
     fun createTimeLabel(time: Int): String {
