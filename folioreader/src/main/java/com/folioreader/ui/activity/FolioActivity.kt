@@ -15,9 +15,13 @@
  */
 package com.folioreader.ui.activity
 
+//import com.google.android.gms.ads.reward.RewardedVideoAd
+//import com.google.android.gms.ads.reward.RewardedVideoAdListener
+
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -25,13 +29,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -60,6 +67,18 @@ import com.folioreader.ui.view.MediaControllerCallback
 import com.folioreader.util.AppUtil
 import com.folioreader.util.FileUtil
 import com.folioreader.util.UiUtil
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import kotlinx.android.synthetic.main.folio_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.readium.r2.shared.Link
 import org.readium.r2.shared.Publication
@@ -68,47 +87,19 @@ import org.readium.r2.streamer.parser.EpubParser
 import org.readium.r2.streamer.parser.PubBox
 import org.readium.r2.streamer.server.Server
 import java.lang.ref.WeakReference
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.reward.RewardItem
-//import com.google.android.gms.ads.reward.RewardedVideoAd
-//import com.google.android.gms.ads.reward.RewardedVideoAdListener
-
-import kotlinx.android.synthetic.main.folio_activity.*
-import android.media.MediaPlayer
-import android.annotation.SuppressLint
-import android.content.*
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.NetworkInfo
-import android.os.Message
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
-import android.widget.*
-import androidx.core.net.toUri
-import androidx.core.os.postDelayed
-import java.util.concurrent.TimeUnit
 
 
+@RequiresApi(Build.VERSION_CODES.HONEYCOMB)
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener
 //Odullu Reklam için
 /* ,RewardedVideoAdListener */ {
 
+    private var exoplayerView: SimpleExoPlayerView? = null
+    private var exoplayer: SimpleExoPlayer? = null
+    private var playbackStateBuilder: PlaybackStateCompat.Builder? = null
+    private var mediaSession: MediaSessionCompat? = null
 
-    private var seekbar: SeekBar? = null
-    private var rewind_btn: ImageView? = null
-    private var play_btn: ImageView? = null
-    private var pause_btn: ImageView? = null
-    private var fforward_btn: ImageView? = null
-    private var currentTime_tw: TextView? = null
-    private var totalTime_tw: TextView? = null
-
-    private var initilazedCheckMediaPlayerr: Boolean = false
-    private var handler1: Handler? = null
-    private var mediaPlayerLayout1: LinearLayout? = null
-    private lateinit var mediaPlayer: MediaPlayer
 
     lateinit var mAdView: AdView
 
@@ -313,7 +304,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         initDistractionFreeMode(savedInstanceState)
 
         setContentView(R.layout.folio_activity)
-        mediaPlayerLayout1 = findViewById(R.id.mediaPlayerLayout)
         this.savedInstanceState = savedInstanceState
 
         if (savedInstanceState != null) {
@@ -359,150 +349,47 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         //Audio Player
         mAudioLink = intent.getStringExtra(FolioReader.EXTRA_AUDIO)
-        val uri = mAudioLink?.toUri()
+        val uri = Uri.parse(mAudioLink)
 
-        seekbar = findViewById(R.id.seekbar1)
-        rewind_btn = findViewById(R.id.rewind_btn1)
-        play_btn = findViewById(R.id.play_btn1)
-        pause_btn = findViewById(R.id.pause_btn1)
-        fforward_btn = findViewById(R.id.fforward_btn1)
-        totalTime_tw = findViewById(R.id.totalTime_tw1)
-        currentTime_tw = findViewById(R.id.currentTime_tw1)
-        if (uri != null) {
-            initializeMediaPlayer(uri, this)
-        }
-        play_btn?.setOnClickListener {
-            try {
-                if (initilazedCheckMediaPlayerr){
-                    if (!mediaPlayer.isPlaying) {
-                        mediaPlayer.start()
-                        play_btn!!.visibility = View.GONE
-                        pause_btn!!.visibility = View.VISIBLE
-                    }
-                }else if (!initilazedCheckMediaPlayerr){
-                    if (uri != null) {
-                        initializeMediaPlayer(uri,this)}
-                }
-            }catch (e:Exception){}
 
-        }
+        exoplayerView = findViewById(R.id.simpleExoPlayerView)
 
+        initializePlayer(uri)
     }
 
-    private fun initializeMediaPlayer(uri: Uri, mcontext: Context) {
-        if (isInternetAvailable(mcontext)) {
-            try {
-                mediaPlayer = MediaPlayer.create(mcontext, uri)
-                totalTime_tw?.setText(createTimeLabel(mediaPlayer.duration))
-                seekbar?.progress = 0
-                seekbar?.max = mediaPlayer.duration
+    private fun initializePlayer(mAudiodur: Uri) {
+        val trackSelector = DefaultTrackSelector()
+        exoplayer = ExoPlayerFactory.newSimpleInstance(baseContext, trackSelector)
 
-                pause_btn?.setOnClickListener {
-                    if (mediaPlayer.isPlaying) {
-                        mediaPlayer.pause()
-                        play_btn!!.visibility = View.VISIBLE
-                        pause_btn!!.visibility = View.GONE
-                    }
-                }
-                fforward_btn?.setOnClickListener {
-                    mediaPlayer.seekTo(mediaPlayer.currentPosition + 10000)
-                    currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-                }
-                rewind_btn?.setOnClickListener {
-                    mediaPlayer.seekTo(mediaPlayer.currentPosition - 10000)
-                    currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-                }
-                seekbar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(p0: SeekBar?, pos: Int, changed: Boolean) {
-                        if (changed) {
-                            mediaPlayer.seekTo(pos)
-                        }
-                        currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-                    }
+        exoplayerView?.player = exoplayer
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+        val userAgent = Util.getUserAgent(baseContext, "Exo")
 
-                    override fun onStopTrackingTouch(p0: SeekBar?) {
-                    }
-
-                })
-                handler1 = Handler()
-                val runnable: Runnable = object : Runnable {
-                    override fun run() {
-                        val seekbar1 = seekbar
-                        if (mediaPlayer != null) {
-                            if (mediaPlayer.isPlaying) {
-                                if (seekbar1 != null) seekbar1.progress =
-                                    mediaPlayer.currentPosition
-                                currentTime_tw?.setText(createTimeLabel(mediaPlayer.currentPosition))
-                            }
-                        }
-                        handler1!!.postDelayed(this, 900)
-                    }
-                }
-                handler1!!.postDelayed(runnable, 900)
-
-                mediaPlayer.setOnCompletionListener {
-                    play_btn!!.visibility = View.VISIBLE
-                    pause_btn!!.visibility = View.GONE
-                    seekbar?.progress = 0
-                    mediaPlayer.seekTo(0)
-                }
-                if (mediaPlayer != null) {
-                    initilazedCheckMediaPlayerr = true
-                    if (!mediaPlayer.isPlaying) {
-                        Log.d("mediaPlayer", "It is working")
-                    }
-                } else {
-                    Toast.makeText(
-                        mcontext,
-                        "Please Check Internet Conectivity!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }catch (e:Exception){}
-        }
-    }
-
-    fun createTimeLabel(time: Int): String {
-        return String.format(
-            "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(time.toLong()),
-            (TimeUnit.MILLISECONDS.toSeconds(time.toLong()) - TimeUnit.MINUTES.toSeconds(
-                TimeUnit.MILLISECONDS.toMinutes(
-                    time.toLong()
-                )
-            ))
+        val mediaSource = ExtractorMediaSource(
+            mAudiodur,
+            DefaultDataSourceFactory(baseContext, userAgent),
+            DefaultExtractorsFactory(),
+            null,
+            null
         )
+
+        exoplayer?.prepare(mediaSource)
+
+        val componentName = ComponentName(baseContext, "Exo")
+        mediaSession = MediaSessionCompat(baseContext, "ExoPlayer", componentName, null)
+
+        playbackStateBuilder = PlaybackStateCompat.Builder()
+
+        playbackStateBuilder?.setActions(
+            PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PAUSE or
+                    PlaybackStateCompat.ACTION_FAST_FORWARD
+        )
+
+        mediaSession?.setPlaybackState(playbackStateBuilder?.build())
+        mediaSession?.isActive = true
+
     }
 
-    fun isInternetAvailable(context: Context): Boolean {
-        var result = false
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val networkCapabilities = connectivityManager.activeNetwork ?: return false
-            val actNw =
-                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-            result = when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            connectivityManager.activeNetworkInfo?.run {
-                result = when (type) {
-                    ConnectivityManager.TYPE_WIFI -> true
-                    ConnectivityManager.TYPE_MOBILE -> true
-                    ConnectivityManager.TYPE_ETHERNET -> true
-                    else -> false
-                }
-
-            }
-        }
-        return result
-    }
 
     fun Context.toast(
         context: Context = applicationContext,
@@ -555,7 +442,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         actionBar!!.setBackgroundDrawable(
             ColorDrawable(ContextCompat.getColor(this, R.color.white))
         )
-        mediaPlayerLayout1?.setBackgroundColor(resources.getColor(R.color.day_background_color))
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
     }
 
@@ -565,7 +451,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         actionBar!!.setBackgroundDrawable(
             ColorDrawable(ContextCompat.getColor(this, R.color.black))
         )
-        mediaPlayerLayout1?.setBackgroundColor(resources.getColor(R.color.night_background_color))
 
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.night_title_text_color))
     }
@@ -940,7 +825,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        mediaPlayerLayout1?.visibility = View.VISIBLE
+        exoplayerView?.visibility = View.VISIBLE
     }
 
     private fun hideSystemUI() {
@@ -952,7 +837,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 or View.SYSTEM_UI_FLAG_IMMERSIVE)
-        mediaPlayerLayout1?.visibility = View.GONE
+        exoplayerView?.visibility = View.GONE
     }
 
     override fun getEntryReadLocator(): ReadLocator? {
@@ -1033,17 +918,19 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         }
     }
 
+
     override fun onBackPressed() {
         super.onBackPressed()
-        handler1?.removeCallbacksAndMessages(null)
-        if(initilazedCheckMediaPlayerr) {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.stop()
-                mediaPlayer.release()
-            }
-        }
+        releasePlayer()
     }
 
+    private fun releasePlayer() {
+        if (exoplayer != null) {
+            exoplayer?.stop()
+            exoplayer?.release()
+            exoplayer = null
+        }
+    }
 
     override fun onDestroy() {
 
