@@ -42,11 +42,11 @@
     </com.folioreader.ui.view.FolioAppBarLayout>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/simpleExoPlayerView_CardView"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginBottom="46dp"
-        android:outlineAmbientShadowColor="#842FD5"
-        ads:cardBackgroundColor="#3BE442"
+        ads:cardBackgroundColor="#5E635E"
         ads:cardCornerRadius="8dp"
         ads:layout_constraintBottom_toTopOf="@+id/adviewLayout"
         app:cardElevation="0.4dp"
@@ -61,7 +61,6 @@
             ads:controller_layout_id="@layout/exo_playback_control_view"
             ads:fastforward_increment="10000"
             ads:hide_on_touch="false"
-
             ads:rewind_increment="10000"
             ads:show_timeout="0"
             ads:use_artwork="false" />

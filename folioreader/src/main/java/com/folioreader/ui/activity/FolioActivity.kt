@@ -43,6 +43,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -96,6 +97,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 /* ,RewardedVideoAdListener */ {
 
     private var exoplayerView: SimpleExoPlayerView? = null
+    private var simpleExoPlayerViewCardView: CardView? = null
     private var exoplayer: SimpleExoPlayer? = null
     private var playbackStateBuilder: PlaybackStateCompat.Builder? = null
     private var mediaSession: MediaSessionCompat? = null
@@ -353,6 +355,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
 
         exoplayerView = findViewById(R.id.simpleExoPlayerView)
+        simpleExoPlayerViewCardView = findViewById(R.id.simpleExoPlayerView_CardView)
 
         initializePlayer(uri)
     }
@@ -826,6 +829,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         exoplayerView?.visibility = View.VISIBLE
+        simpleExoPlayerViewCardView?.visibility = View.VISIBLE
     }
 
     private fun hideSystemUI() {
@@ -838,6 +842,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 or View.SYSTEM_UI_FLAG_IMMERSIVE)
         exoplayerView?.visibility = View.GONE
+        simpleExoPlayerViewCardView?.visibility = View.GONE
     }
 
     override fun getEntryReadLocator(): ReadLocator? {
