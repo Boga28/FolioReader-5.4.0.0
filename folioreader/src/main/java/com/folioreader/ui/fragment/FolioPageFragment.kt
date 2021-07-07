@@ -156,17 +156,21 @@ class FolioPageFragment : Fragment(),
         chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem.href!!.substring(1))
 
         searchLocatorVisible = savedInstanceState?.getParcelable(BUNDLE_SEARCH_LOCATOR)
-
-        if (spineItem != null) {
-            // SMIL Parsing not yet implemented in r2-streamer-kotlin
-            //if (spineItem.getProperties().contains("media-overlay")) {
-            //    mediaController = new MediaController(getActivity(), MediaController.MediaType.SMIL, this);
-            //    hasMediaOverlay = true;
-            //} else {
-            mediaController = MediaController(activity, MediaController.MediaType.TTS, this)
-            mediaController!!.setTextToSpeech(activity)
-            //}
+        try {
+            if (spineItem != null) {
+                // SMIL Parsing not yet implemented in r2-streamer-kotlin
+                //if (spineItem.getProperties().contains("media-overlay")) {
+                //    mediaController = new MediaController(getActivity(), MediaController.MediaType.SMIL, this);
+                //    hasMediaOverlay = true;
+                //} else {
+                mediaController = MediaController(activity, MediaController.MediaType.TTS, this)
+                mediaController!!.setTextToSpeech(activity)
+                //}
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_TAG, "MediaController", e)
         }
+
         highlightStyle = HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.Normal)
         mRootView = inflater.inflate(R.layout.folio_page_fragment, container, false)
         mPagesLeftTextView = mRootView!!.findViewById<View>(R.id.pagesLeft) as TextView
