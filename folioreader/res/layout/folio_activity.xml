@@ -54,9 +54,9 @@
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/simpleExoPlayerView"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="68dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="45dp"
+            android:layout_marginBottom="32dp"
             ads:controller_layout_id="@layout/exo_playback_control_view"
             ads:fastforward_increment="10000"
             ads:hide_on_touch="false"
